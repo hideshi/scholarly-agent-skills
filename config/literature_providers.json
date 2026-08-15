@@ -1,0 +1,34 @@
+{
+  "default_provider": "openalex",
+  "contact_email": "",
+  "providers": {
+    "arxiv": {
+      "name": "arXiv",
+      "type": "arxiv_atom",
+      "base_url": "https://export.arxiv.org/api/query",
+      "enabled": true,
+      "description": "Preprints in Computer Science, Physics, Math, Quantitative Biology/Finance"
+    },
+    "openalex": {
+      "name": "OpenAlex",
+      "type": "openalex_json",
+      "base_url": "https://api.openalex.org/works",
+      "enabled": true,
+      "description": "Global Open Access papers database covering Humanities, Social Sciences & Sciences"
+    },
+    "crossref": {
+      "name": "Crossref",
+      "type": "crossref_json",
+      "base_url": "https://api.crossref.org/works",
+      "enabled": true,
+      "description": "Official DOI registry for academic journals, books, and conference proceedings"
+    },
+    "semanticscholar": {
+      "name": "Semantic Scholar",
+      "type": "semanticscholar_json",
+      "base_url": "https://api.semanticscholar.org/graph/v1/paper/search",
+      "enabled": true,
+      "description": "AI-backed academic search engine across all scholarly disciplines"
+    }
+  }
+}

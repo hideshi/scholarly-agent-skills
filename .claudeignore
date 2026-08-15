@@ -1,0 +1,23 @@
+# AI Agent Ignore File (.claudeignore / .ignore)
+# Protects sensitive PII research data, private transcripts, and credentials from AI Agent context.
+
+# Raw / Unanonymized Research Data
+raw_data/
+private_data/
+personal_data/
+transcripts_raw/
+interview_raw/
+
+# Sensitive file patterns
+*.private.md
+*.private.json
+*.pii.csv
+*.raw.txt
+*.pfx
+*.pem
+
+# Environment & Credentials
+.env
+.env.*
+credentials/
+secrets/

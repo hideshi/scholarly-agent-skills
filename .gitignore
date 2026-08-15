@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.DS_Store
+
+# Credentials and local secrets
+.env
+.env.*
+credentials/
+secrets/
+
+# PII mapping and raw research artifacts (must never be committed)
+mapping.json
+*.pii.csv
+*.private.md
+*.private.json

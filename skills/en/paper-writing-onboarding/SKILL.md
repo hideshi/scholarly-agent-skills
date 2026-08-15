@@ -1,0 +1,79 @@
+---
+name: paper-writing-onboarding
+version: 1.0.0
+description: Use when writing an academic paper for the first time or starting a new research project, to get guided through repository structure, initial setup, and the phase-based writing workflow
+---
+
+# Paper Writing Onboarding Skill
+
+## Purpose
+Guide users who are writing their first academic paper (or using this skill set for the first time) through the software-engineering-driven writing workflow, from environment setup to first-draft completion. Prevents the most common beginner failures upfront: unsourced numerical claims, ambiguous concept usage, and oversized scope.
+
+## Trigger Conditions
+- When starting a new paper or research project
+- When the user is identified as a first-time or inexperienced academic writer
+- When the user asks "where do I start?"
+
+## Pre-Writing Setup Checklist
+
+Before drafting, verify the following environment prerequisites:
+
+1. **Skills installed**: This repository is available as a submodule (`.scholarly-agent-skills/`) or via symbolic link (see root `AGENTS.md` for setup).
+2. **Language configured**: [`config/user_preferences.json`](../../../config/user_preferences.json) is set to the user's writing language.
+3. **AI Ignore configured**: If handling raw or confidential data, `scripts/setup_ai_ignore.py` has been run to exclude them from AI indexing.
+4. **Directory structure**: Create the four-category artifact structure:
+
+```text
+docs/
+├── chapters/    # Manuscript body (one Markdown file per chapter)
+├── design/      # Internal design docs (concept inventory, objection lists, audit reports)
+├── literature/  # Literature artifacts (matrix, gap report, paper notes)
+└── data/        # Primary data (statistics, survey datasets)
+```
+
+## Phase-Based Writing Workflow
+
+Each phase hands off to a dedicated skill. Following this order avoids the single most common beginner mistake: jumping straight into writing the manuscript.
+
+### Phase 0: Articulate the Research Plan
+→ Invoke [`research-plan-workshop`](../research-plan-workshop/SKILL.md) and, through dialogue, write `docs/design/research-plan.md` (one page maximum):
+- The research question in a single sentence
+- Target audience and venue (conference, journal, preprint server)
+- Definition of done (chapter outline, target length, deadline)
+
+### Phase 1: Establish Conceptual Foundations
+→ Invoke [`scholarly-concept-modeling`](../scholarly-concept-modeling/SKILL.md) to define and bound core concepts. Starting to write with polysemous terms guarantees a full rewrite later.
+
+### Phase 2: Literature Research
+→ Use [`literature-search`](../literature-search/SKILL.md) to collect sources, [`pdf-paper-ingestion`](../pdf-paper-ingestion/SKILL.md) to convert papers to Markdown, and [`academic-paper-translation`](../academic-paper-translation/SKILL.md) for foreign-language sources.
+→ Filter citation candidates through [`source-criticism-gate`](../source-criticism-gate/SKILL.md) (Tier 1/2 only).
+
+### Phase 3: Establish Novelty
+→ Use [`literature-gap-analysis`](../literature-gap-analysis/SKILL.md) to structure the gap between prior work (AS-IS) and your contribution (TO-BE), forming the core of the Introduction.
+
+### Phase 4: Draft the Manuscript (Objection-Driven)
+→ Follow [`counter-argument-tdd`](../counter-argument-tdd/SKILL.md): enumerate anticipated objections in `docs/design/test-cases.md` before writing each section.
+→ When using primary data, run [`primary-data-integration`](../primary-data-integration/SKILL.md) first (PII masking and inventory).
+
+### Phase 5: Verification & Revision
+→ Audit every claim with [`claim-evidence-gate`](../claim-evidence-gate/SKILL.md), then verify 1-to-1 citation correspondence with [`citation-traceability-audit`](../citation-traceability-audit/SKILL.md).
+
+### Phase 6: Submission & Publication
+→ Use [`submission-venue-advisor`](../submission-venue-advisor/SKILL.md) to select the optimal venue for your field and language, then follow its submission procedure.
+
+## Common Beginner Failures and Countermeasures
+
+| Failure | Symptom | Countermeasure |
+|---|---|---|
+| Unsourced figures | Writing "X is 2.3 times Y" without a source | Follow the fact-grounding rule in `rules/`: fetch primary data first, store in `docs/data/`, then reference from the manuscript |
+| Oversized scope | Stuffing multiple major claims into one paper | Limit the research question to one sentence in Phase 0; revisit the plan if you drift |
+| Ambiguous concepts | Using the same term with different meanings across contexts | Build the concept inventory in Phase 1 before drafting |
+| Perfectionist paralysis | Polishing the Introduction forever | Write each chapter as a rough draft that clears the objection list, then verify in Phase 5 |
+
+## Working Across Sessions
+
+For long-running projects, invoke [`session-research-handoff`](../session-research-handoff/SKILL.md) at the end of every session from day one, recording context in `docs/session-handoff.md`.
+
+## Outputs
+- `docs/design/research-plan.md` (Research plan: question, target venue, definition of done)
+- Initialized four-category directory structure

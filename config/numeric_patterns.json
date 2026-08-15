@@ -1,0 +1,9 @@
+{
+  "description": "Customizable unit and currency terms for quantitative candidate extraction in check_fact_grounding.py",
+  "units_ja": [
+    "ペソ", "円", "ドル", "ユーロ", "万", "億", "兆", "世帯", "人", "件", "個", "％", "パーセント", "ポイント", "倍"
+  ],
+  "units_en": [
+    "PHP", "USD", "EUR", "JPY", "percent", "percentage", "points", "fold", "times", "households", "people", "cases"
+  ]
+}

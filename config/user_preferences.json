@@ -1,0 +1,8 @@
+{
+  "native_language": "Japanese",
+  "language_code": "ja",
+  "translation_style": "academic_formal",
+  "preserve_original_terms": true,
+  "output_mode": "bilingual_parallel",
+  "notes": "Configuration for native language translation and scholarly term mapping."
+}

@@ -1,0 +1,9 @@
+{
+  "description": "Project-specific custom trusted domain allowlist for source criticism audit",
+  "tier_1": [
+    "example-academic-journal.org"
+  ],
+  "tier_2": [
+    "example-local-agency.gov.ph"
+  ]
+}

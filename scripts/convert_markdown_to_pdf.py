@@ -11,6 +11,7 @@ Supports multiple conversion backends with graceful fallback:
 
 import sys
 import os
+import re
 import html
 import argparse
 import subprocess

@@ -14,7 +14,8 @@ from typing import List, Tuple
 
 FORBIDDEN_PATTERN = re.compile(
     r'\b(TDD|Red\s*Phase|Green\s*Phase|Refactor|Test[- ]?Case|Sprint|Coverage)\b|'
-    r'テストケース|フェーズ\s*\d|スプリント|カバレッジ|リファクタ',
+    r'テストケース|フェーズ\s*\d|スプリント|カバレッジ|リファクタ|'
+    r'docs/data/|docs/literature/|docs/design/|一次データ:\s*docs/|data:\s*docs/',
     re.IGNORECASE
 )
 
@@ -48,7 +49,7 @@ def scan_target(target_path: Path) -> List[Tuple[Path, int, str, str]]:
     if target_path.is_file():
         files = [target_path]
     elif target_path.is_dir():
-        files = [f for f in target_path.rglob("*.md") if "test-cases.md" not in f.name and "evidence-gate-report.md" not in f.name]
+        files = [f for f in target_path.rglob("*.md") if f.name not in ("test-cases.md", "evidence-gate-report.md", "references.md")]
     else:
         print(f"❌ Error: Target path '{target_path}' does not exist.", file=sys.stderr)
         return all_violations

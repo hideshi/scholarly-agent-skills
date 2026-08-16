@@ -17,6 +17,8 @@ from convert_pdf_to_markdown import (
     parse_pdf_text_operators,
     extract_images_from_pdf_stream,
     convert_pdf_to_markdown,
+    normalize_ppm_images,
+    convert_ppm_to_png,
 )
 
 
@@ -76,6 +78,37 @@ class TestConvertPdfToMarkdown(unittest.TestCase):
             self.assertIn("# Sample Paper", md_text)
             self.assertIn("Introduction to Philosophy", md_text)
             self.assertIn("![extracted_image_1.jpg](assets/extracted_image_1.jpg)", md_text)
+
+    def test_convert_ppm_to_png_when_pillow_available(self):
+        try:
+            from PIL import Image  # noqa: F401
+        except ImportError:
+            self.skipTest("Pillow not installed")
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            ppm_path = Path(tmp_dir) / "sample.ppm"
+            # Minimal P5 grayscale 2x2 image
+            ppm_path.write_bytes(b"P5\n2 2\n255\n\x00\xFF\x80\x40")
+            png_path = convert_ppm_to_png(ppm_path)
+            self.assertIsNotNone(png_path)
+            self.assertTrue(png_path.exists())
+            self.assertEqual(png_path.suffix, ".png")
+
+    def test_normalize_ppm_images_replaces_names(self):
+        try:
+            from PIL import Image  # noqa: F401
+        except ImportError:
+            self.skipTest("Pillow not installed")
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            assets_dir = Path(tmp_dir)
+            ppm_path = assets_dir / "extracted_image_1.ppm"
+            ppm_path.write_bytes(b"P5\n1 1\n255\n\x80")
+            names = normalize_ppm_images(assets_dir, ["extracted_image_1.ppm", "extracted_image_2.jpg"])
+            self.assertEqual(names[0], "extracted_image_1.png")
+            self.assertFalse(ppm_path.exists())
+            self.assertTrue((assets_dir / "extracted_image_1.png").exists())
+            self.assertEqual(names[1], "extracted_image_2.jpg")
 
 
 if __name__ == "__main__":

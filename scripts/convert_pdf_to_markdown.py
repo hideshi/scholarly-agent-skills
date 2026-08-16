@@ -17,6 +17,8 @@ import os
 import re
 import zlib
 import argparse
+import subprocess
+import shutil
 from pathlib import Path
 
 
@@ -126,6 +128,101 @@ def extract_images_from_pdf_stream(pdf_bytes: bytes, output_assets_dir: Path) ->
     return saved_images
 
 
+def convert_ppm_to_png(ppm_path: Path) -> Path | None:
+    """
+    Convert a PPM/PGM file to PNG using Pillow (preferred) or ImageMagick.
+    Returns the PNG path on success, or None if no converter is available.
+    """
+    png_path = ppm_path.with_suffix(".png")
+
+    try:
+        from PIL import Image  # type: ignore
+
+        with Image.open(ppm_path) as img:
+            img.save(png_path, "PNG")
+        return png_path
+    except ImportError:
+        pass
+    except Exception as e:
+        print(f"Warning: Pillow failed to convert {ppm_path.name}: {e}", file=sys.stderr)
+
+    convert_bin = shutil.which("magick") or shutil.which("convert")
+    if convert_bin:
+        try:
+            subprocess.run(
+                [convert_bin, str(ppm_path), str(png_path)],
+                check=True,
+                capture_output=True,
+                timeout=30,
+            )
+            if png_path.exists():
+                return png_path
+        except Exception as e:
+            print(f"Warning: ImageMagick failed to convert {ppm_path.name}: {e}", file=sys.stderr)
+
+    return None
+
+
+def normalize_ppm_images(assets_dir: Path, image_names: list[str]) -> list[str]:
+    """
+    Replace .ppm entries with .png when a converter is available.
+    Original PPM files are removed after successful conversion.
+    """
+    normalized: list[str] = []
+    for img_name in image_names:
+        if not img_name.lower().endswith(".ppm"):
+            normalized.append(img_name)
+            continue
+
+        ppm_path = assets_dir / img_name
+        if not ppm_path.exists():
+            normalized.append(img_name)
+            continue
+
+        png_path = convert_ppm_to_png(ppm_path)
+        if png_path is None:
+            print(
+                f"Note: Keeping {img_name} as PPM (install Pillow or ImageMagick for PNG conversion).",
+                file=sys.stderr,
+            )
+            normalized.append(img_name)
+            continue
+
+        ppm_path.unlink(missing_ok=True)
+        normalized.append(png_path.name)
+        print(f"   🔄 Converted {img_name} → {png_path.name}", file=sys.stderr)
+
+    return normalized
+
+
+def normalize_ppm_assets_dir(assets_dir: Path) -> int:
+    """Convert all *.ppm files under assets_dir to PNG. Returns conversion count."""
+    if not assets_dir.exists():
+        return 0
+
+    converted = 0
+    for ppm_path in sorted(assets_dir.glob("*.ppm")):
+        png_path = convert_ppm_to_png(ppm_path)
+        if png_path is None:
+            continue
+        ppm_path.unlink(missing_ok=True)
+        converted += 1
+        print(f"✅ Converted {ppm_path.name} → {png_path.name}")
+    return converted
+
+
+def update_markdown_image_refs(md_path: Path, old_ext: str = ".ppm", new_ext: str = ".png") -> int:
+    """Rewrite image links in a Markdown file after PPM normalization."""
+    if not md_path.exists():
+        return 0
+    text = md_path.read_text(encoding="utf-8")
+    updated = text.replace(old_ext, new_ext)
+    if updated != text:
+        md_path.write_text(updated, encoding="utf-8")
+        return text.count(old_ext)
+    return 0
+
+
 def convert_pdf_to_markdown(pdf_path: Path, output_dir: Path = None) -> tuple[Path, list[str]]:
     """
     Convert PDF to Markdown with embedded image extraction.
@@ -159,6 +256,7 @@ def convert_pdf_to_markdown(pdf_path: Path, output_dir: Path = None) -> tuple[Pa
     
     # 1. Extract Images
     extracted_images = extract_images_from_pdf_stream(pdf_bytes, assets_dir)
+    extracted_images = normalize_ppm_images(assets_dir, extracted_images)
     
     # 2. Extract Text Streams
     extracted_text_blocks = []
@@ -228,10 +326,33 @@ def convert_pdf_to_markdown(pdf_path: Path, output_dir: Path = None) -> tuple[Pa
 
 def main():
     parser = argparse.ArgumentParser(description="Convert PDF paper to Markdown with embedded image extraction (Standard Library Only).")
-    parser.add_argument("pdf_file", help="Path to input PDF paper file")
+    parser.add_argument("pdf_file", nargs="?", help="Path to input PDF paper file")
     parser.add_argument("--output-dir", "-o", help="Output directory path (defaults to same directory as PDF)")
-    
+    parser.add_argument(
+        "--normalize-ppm-dir",
+        metavar="ASSETS_DIR",
+        help="Convert existing *.ppm files in ASSETS_DIR to PNG (no PDF conversion)",
+    )
+    parser.add_argument(
+        "--update-md",
+        metavar="MD_FILE",
+        help="With --normalize-ppm-dir, rewrite .ppm image links to .png in MD_FILE",
+    )
+
     args = parser.parse_args()
+
+    if args.normalize_ppm_dir:
+        assets_dir = Path(args.normalize_ppm_dir)
+        count = normalize_ppm_assets_dir(assets_dir)
+        if args.update_md:
+            refs = update_markdown_image_refs(Path(args.update_md))
+            print(f"   📝 Updated {refs} image reference(s) in {args.update_md}")
+        print(f"✅ Normalized {count} PPM file(s) in {assets_dir}")
+        sys.exit(0)
+
+    if not args.pdf_file:
+        parser.error("pdf_file is required unless --normalize-ppm-dir is used")
+
     pdf_path = Path(args.pdf_file)
     output_dir = Path(args.output_dir) if args.output_dir else None
     

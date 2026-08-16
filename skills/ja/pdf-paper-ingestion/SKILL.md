@@ -1,7 +1,7 @@
 ---
 name: pdf-paper-ingestion
-version: 1.0.0
-description: PDF論文をダウンロードした時やテキスト分析時に、見出し構造抽出・埋め込み画像 (JPEG/PPM) の切り出し保存・Markdown埋め込みを行うスキル (※スキャンPDFは非対応・OCR推奨)
+version: 1.1.0
+description: PDF論文をダウンロードした時やテキスト分析時に、見出し構造抽出・埋め込み画像 (JPEG/PNG) の切り出し保存・Markdown埋め込みを行うスキル (※スキャンPDFは非対応・OCR推奨)
 ---
 
 # PDF論文 Markdown変換・画像自動抽出スキル (PDF Paper Ingestion)
@@ -40,6 +40,15 @@ python3 scripts/convert_pdf_to_markdown.py path/to/paper.pdf --output-dir docs/l
 - **通常成功時**:
   - `[paper_name].md`: 抽出された見出し構造・本文・画像リンク。
   - `assets/` ディレクトリ: 抽出された図版ファイル群。
+- **PPM → PNG 自動変換（v1.1.0）**:
+  - PDF 内の FlateDecode 画像は一度 `.ppm` として抽出される。
+  - **Pillow** または **ImageMagick** (`convert` / `magick`) が利用可能な場合、変換直後に `.png` へ正規化し、Markdown 内の参照も `.png` になる。
+  - 既存の `.ppm` のみ変換する場合:
+    ```bash
+    python3 scripts/convert_pdf_to_markdown.py \
+      --normalize-ppm-dir docs/literature/papers/assets \
+      --update-md docs/literature/papers/risko-gilbert-2016.md
+    ```
 - **フォールバック（スキャンPDF・CJK文字化け・暗号化時）**:
   標準スクリプトでテキストが正しく抽出できない場合は、以下のサードパーティ製ツールや外部ライブラリを案内・使用してください：
   - **pymupdf (`fitz`) / pdfplumber**: 高精度なテキスト・CJKエンコーディング抽出
@@ -51,4 +60,5 @@ python3 scripts/convert_pdf_to_markdown.py path/to/paper.pdf --output-dir docs/l
 ## 成果物
 - `docs/literature/papers/[paper_name].md`
 - `docs/literature/papers/assets/extracted_image_*.jpg`
+- `docs/literature/papers/assets/extracted_image_*.png`（PPM 正規化成功時）
 

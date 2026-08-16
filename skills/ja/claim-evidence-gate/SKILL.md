@@ -1,6 +1,6 @@
 ---
 name: claim-evidence-gate
-version: 1.3.1
+version: 1.3.2
 description: 執筆完了時・提出前に、論文内の各主張 (Claim) と提示された一次史料・実験データ・引用根拠 (Evidence) の対応強度を判定する品質ゲート
 ---
 
@@ -15,6 +15,10 @@ description: 執筆完了時・提出前に、論文内の各主張 (Claim) と�
 - 査読者・共同研究者から根拠に関する指摘を受けた際
 
 ## 評価手順
+
+### Step 0: 文献実体化の前提条件（v1.3.2 追加）
+- **`python3 scripts/check_literature_grounding.py` が FAIL を返す場合、本ゲートの評価を中止**し、`citation-traceability-audit` Step 2.5（文献 ingestion）へ差し戻す。
+- WARN のみの場合は評価継続可（ただし full-text 化を推奨）。
 
 ### Step 1: 主張（Claim）とエビデンス（Evidence）の抽出
 1. 本文から断定・主張・統計数値・算出結果（比率・倍率・変化幅等）を行っている段落を特定する。

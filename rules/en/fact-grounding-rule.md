@@ -11,20 +11,32 @@ To fundamentally prevent LLM hallucinations (fabrication of numbers, facts, or c
 
 ---
 
-## 🌐 2. Mandatory Primary Data & Internet Fetching
-- All information cited or referenced in the manuscript MUST be fetched live through:
-  1. **Web Search & URL Fetching Tools**: Real-time searching and reading of official websites and published reports.
-  2. **Open Data API Scripts (`fetch_macro_data.py`)**: Live data fetching from official APIs (e.g., World Bank Open Data API).
-  3. **PDF Ingestion Tools (`convert_pdf_to_markdown.py`)**: Conversion and parsing of downloaded academic PDFs.
-  4. **Manual Primary Data Inventories**: Verified datasets collected offline or via subscription databases (e.g., JSTOR).
+## 🌐 2. Two-Phase Information Model (Discovery / Grounding)
+
+All information cited in the manuscript MUST be separated into two phases by purpose.
+
+### 2-A. Discovery — Insufficient as Citation Evidence
+- **WebSearch / search snippets / agent internal knowledge**: MAY be used ONLY to identify candidate sources and confirm DOI/arXiv IDs. **MUST NOT** serve as evidence for **content claims about academic literature** (what a study showed or argued).
+- **Exception (non-academic sources)**: When an official government or international agency page **is itself primary data** (statistics, policy facts), direct WebFetch of that official page counts as Grounding (equivalent to §2-B).
+- **Allowed tools**: `search_literature.py` (candidate identification), WebSearch (bibliographic metadata only)
+
+### 2-B. Grounding — Mandatory for Academic Citations
+When citing academic literature in manuscript chapters (`docs/chapters/`), agents MUST create **`docs/<paper-id>/literature/papers/*.md`** via one of:
+  1. **PDF ingestion (`convert_pdf_to_markdown.py`)**: Download and convert academic PDFs
+  2. **arXiv / open-access full text**: Download and convert to Markdown
+  3. **Manual literature stub (`status: manual-stub`)**: For books, theses, or paywalled sources—page-referenced excerpts in frontmatter Markdown (linked to §2 manual primary data inventories)
+  4. **Open Data API scripts (`fetch_macro_data.py`, etc.)**: For quantitative claims saved under `docs/data/`
+
+> **Invariant**: `literature-matrix.md` is an index (Discovery artifact) and **MUST NOT** be used as citation evidence. Citation evidence is limited to physical files in `literature/papers/*.md` or `docs/data/`.
 
 ---
 
 ## 📂 3. Mandatory Repository-Level Data Grounding
 - All fetched information MUST be saved as physical data files inside the repository (Git commits are executed upon user approval):
   - **`docs/data/`**: Processed statistical tables, datasets, and indicator files (`*.md`, `*.csv`, `*.json`).
-  - **`docs/literature/`**: Literature matrices, gap reports, and paper notes (`*.md`).
-- Every statistic or factual claim in `docs/chapters/` MUST link to an existing file in `docs/data/` or `docs/literature/`.
+  - **`docs/literature/literature-matrix.md`**: Candidate literature index and gap analysis (**index only—not citation evidence**).
+  - **`docs/literature/papers/*.md`**: Primary literature text (ingestion artifacts—**evidence for academic citations**).
+- Every statistic or factual claim in `docs/chapters/` MUST link to an existing file in `docs/data/` or `docs/literature/papers/`.
 
 ---
 
@@ -40,6 +52,8 @@ When outputting calculated figures (ratios, multipliers, percentage changes, gro
 ---
 
 ## ⚠️ 5. Enforcement & Build-Blocking Action
-- If a statistic or factual claim in `docs/chapters/` lacks a corresponding physical evidence file in `docs/data/` or `docs/literature/`, the AI agent MUST immediately halt writing and:
-  1. Execute web search/API tools or primary data logging to create the required file under `docs/data/` or `docs/literature/`.
+- If a statistic, factual claim, or **academic citation** in `docs/chapters/` lacks a corresponding physical evidence file, the AI agent MUST immediately halt writing and:
+  1. Execute web search/API tools, PDF ingestion, or manual stub registration to create the required file under `docs/data/` or `docs/literature/papers/`.
   2. Withhold or revise the ungrounded assertion until physical data is secured.
+- **Academic citation gate**: When `python3 scripts/check_literature_grounding.py` returns FAIL, block further writing or major edits to the affected chapter/section (WARN allows continued drafting but full-text grounding is recommended before claim-evidence-gate).
+- **Gate uses `papers/*.md` as canonical**: PDFs MAY be gitignored; judgments rely on Markdown frontmatter and body text length (reproducible in CI/clean clones).

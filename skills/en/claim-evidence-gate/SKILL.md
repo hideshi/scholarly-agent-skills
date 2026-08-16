@@ -1,6 +1,6 @@
 ---
 name: claim-evidence-gate
-version: 1.3.1
+version: 1.3.2
 description: Use when validating claims against primary sources, empirical data, or citation evidence prior to submission or peer review
 ---
 
@@ -15,6 +15,10 @@ Apply invariant validation discipline to verify that every thesis claim in the m
 - When a reviewer or collaborator raises concerns about evidentiary support
 
 ## Evaluation Steps
+
+### Step 0: Literature Grounding Prerequisite (added in v1.3.2)
+- **If `python3 scripts/check_literature_grounding.py` returns FAIL, halt this gate** and return to `citation-traceability-audit` Step 2.5 (literature ingestion).
+- WARN-only results may proceed (full-text grounding recommended before submission).
 
 ### Step 1: Extract Claim–Evidence Pairs
 1. Identify paragraph blocks containing claims, statistical figures, or calculated values (ratios, percentage changes, growth rates).

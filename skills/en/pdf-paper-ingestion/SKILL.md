@@ -1,7 +1,7 @@
 ---
 name: pdf-paper-ingestion
-version: 1.0.0
-description: Use when ingesting downloaded PDF papers to extract text outline structure and extract embedded images (JPEG/PPM) into Markdown (Note: scanned image PDFs require external OCR)
+version: 1.1.0
+description: Use when ingesting downloaded PDF papers to extract text outline structure and extract embedded images (JPEG/PNG) into Markdown (Note: scanned image PDFs require external OCR)
 ---
 
 # PDF Paper Ingestion Skill
@@ -40,6 +40,15 @@ python3 scripts/convert_pdf_to_markdown.py path/to/paper.pdf --output-dir docs/l
 - **Normal Success**:
   - `[paper_name].md`: Extracted section headings, text body, and image links.
   - `assets/` directory: Extracted figure files.
+- **PPM → PNG auto-normalization (v1.1.0)**:
+  - FlateDecode images are first saved as `.ppm` (stdlib-only extraction).
+  - When **Pillow** or **ImageMagick** (`convert` / `magick`) is available, they are converted to `.png` immediately and Markdown links use `.png`.
+  - To normalize existing `.ppm` files only:
+    ```bash
+    python3 scripts/convert_pdf_to_markdown.py \
+      --normalize-ppm-dir docs/literature/papers/assets \
+      --update-md docs/literature/papers/risko-gilbert-2016.md
+    ```
 - **Fallbacks (Scanned, CJK CIDFont, or Encrypted PDFs)**:
   If the standard script cannot decode text accurately, recommend or use third-party libraries:
   - **pymupdf (`fitz`) / pdfplumber**: High-accuracy text and CJK encoding extraction
@@ -51,4 +60,5 @@ Pass the converted Markdown file to `literature-gap-analysis` (Literature Gap An
 ## Outputs
 - `docs/literature/papers/[paper_name].md`
 - `docs/literature/papers/assets/extracted_image_*.jpg`
+- `docs/literature/papers/assets/extracted_image_*.png` (when PPM normalization succeeds)
 

@@ -1,6 +1,6 @@
 ---
 name: session-research-handoff
-version: 2.3.0
+version: 2.4.0
 description: Use when ending a session or resuming long-term writing to summarize and restore research context, open questions, active thought state, and pending tasks. Supports multi-paper repositories with context-aware routing.
 ---
 
@@ -9,17 +9,38 @@ description: Use when ending a session or resuming long-term writing to summariz
 ## Purpose
 Apply session handoff discipline to preserve research context, active draft state, unverified citations, active thought context, and pending literature checks across long writing sessions and AI Agent context resets. Supports multi-paper repositories by routing handoff records to the appropriate paper-specific or root-level file.
 
-## Invariant (v2.3.0): Commit → Log
+## Invariant (v2.4.0): Agent / Model in Commit Messages
 
-> **Invariant**: **Whenever you create a Git commit, you MUST append a row to `docs/<paper-id>/design/test-cases.md` §5 Session Log.** Do not wait for session end.
+> **Invariant**: **Every Git commit MUST end with `Agent:` and `Model:` lines.** Routine model traceability uses `git log` as the source of truth; §5 double-logging is not required.
 
-| Timing | Required action |
-| :--- | :--- |
-| **Before commit** (recommended) | Complete Step 2 identity checklist and draft the §5 row |
-| **After commit** | Record the final commit hash(es) in the §5 "Related commits" column |
+### Required commit message footer
 
-- Multiple commits in one session: **append hashes to the same row** if agent/model and work theme are unchanged; **add a new row** after a model switch or major theme change.
-- Commits to `scholarly-agent-skills` alone still get recorded in the paper project's §5 related-commits column when they support that paper.
+```text
+<subject>
+
+<body (optional)>
+
+Agent: Cursor
+Model: Cursor / Composer / 2.5
+```
+
+| Field | Format | Example |
+| :--- | :--- | :--- |
+| **Agent** | Execution environment (IDE/CLI) | `Cursor`, `Claude Code` |
+| **Model** | `Provider / Model name / Version` | `Moonshot AI / Kimi / K3` |
+
+- **Before committing**: Complete Step 2 identity checklist (self-ID → UI → user confirmation; no guessing).
+- Apply the same footer to **scholarly-agent-skills-only** commits when they support a paper project.
+
+### §5 Session Log (exceptions only)
+
+Use `docs/<paper-id>/design/test-cases.md` §5 **only** for:
+
+- **Non-commit work** (external review, author oral reports, dialogue-only design review)
+- **Retroactive backfill** (pre-protocol sessions without Agent/Model in commit history)
+- **Optional session summaries** (narrative spanning multiple commits)
+
+> v2.3.0 "Commit → append §5 row" is **retired in v2.4.0** to avoid hash backfill commit chains.
 
 ## Trigger Conditions
 - At the end of each working session
@@ -49,7 +70,7 @@ When managing multiple papers in a single repository, determine the target file 
 
 ### Step 2: Execution Environment Identity Verification (Pre-Recording Checklist)
 
-Before writing execution environment data to a handoff file or session log (e.g., `test-cases.md` §5), complete the checklist below. **Do not copy the previous log row** — model switches can occur within the same chat.
+Before writing `Agent:` / `Model:` lines in a **commit message**, or before logging an exception row in `test-cases.md` §5, complete the checklist below. **Do not copy the previous log row or prior commit message** — model switches can occur within the same chat.
 
 | # | Check | Procedure |
 | :-: | :--- | :--- |

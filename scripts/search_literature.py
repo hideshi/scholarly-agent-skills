@@ -145,6 +145,12 @@ def search_openalex(base_url: str, query: str, max_results: int = 5, headers: di
                 summary = summary[:497] + "..."
 
         url_link = item.get('doi') or (item.get('primary_location') or {}).get('landing_page_url') or item.get('id')
+        pdf_url = (item.get('best_oa_location') or {}).get('pdf_url') or ''
+        if not pdf_url:
+            for loc in item.get('locations') or []:
+                if loc.get('pdf_url'):
+                    pdf_url = loc['pdf_url']
+                    break
         
         results.append({
             'provider': 'OpenAlex',
@@ -153,7 +159,8 @@ def search_openalex(base_url: str, query: str, max_results: int = 5, headers: di
             'authors': authors,
             'published': published,
             'summary': summary,
-            'url': url_link
+            'url': url_link,
+            'pdf_url': pdf_url,
         })
     return results
 
@@ -193,7 +200,7 @@ def search_crossref(base_url: str, query: str, max_results: int = 5, headers: di
 
 def search_semanticscholar(base_url: str, query: str, max_results: int = 5, headers: dict = None) -> list:
     encoded_query = urllib.parse.quote(query)
-    url = f"{base_url}?query={encoded_query}&limit={max_results}&fields=title,authors,year,abstract,url"
+    url = f"{base_url}?query={encoded_query}&limit={max_results}&fields=title,authors,year,abstract,url,openAccessPdf"
     raw_json = fetch_url(url, headers=headers)
     data = json.loads(raw_json.decode('utf-8'))
     
@@ -204,6 +211,7 @@ def search_semanticscholar(base_url: str, query: str, max_results: int = 5, head
         published = str(item.get('year') or '')
         summary = item.get('abstract') or "No abstract available"
         url_link = item.get('url') or ''
+        pdf_url = (item.get('openAccessPdf') or {}).get('url') or ''
         
         results.append({
             'provider': 'SemanticScholar',
@@ -212,7 +220,8 @@ def search_semanticscholar(base_url: str, query: str, max_results: int = 5, head
             'authors': authors,
             'published': published,
             'summary': summary,
-            'url': url_link
+            'url': url_link,
+            'pdf_url': pdf_url,
         })
     return results
 
@@ -311,6 +320,8 @@ def format_markdown(results: list) -> str:
         lines.append(f"- **Provider**: `{paper['provider']}` | **ID**: `{paper['id']}`")
         lines.append(f"- **Authors**: {authors_str}")
         lines.append(f"- **Published**: {paper['published']}")
+        if paper.get('pdf_url'):
+            lines.append(f"- **OA PDF**: {paper['pdf_url']}")
         lines.append(f"- **Abstract**: {paper['summary']}\n")
     return "\n".join(lines)
 

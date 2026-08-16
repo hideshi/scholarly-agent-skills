@@ -1,6 +1,6 @@
 ---
 name: session-research-handoff
-version: 2.2.0
+version: 2.3.0
 description: Use when ending a session or resuming long-term writing to summarize and restore research context, open questions, active thought state, and pending tasks. Supports multi-paper repositories with context-aware routing.
 ---
 
@@ -8,6 +8,18 @@ description: Use when ending a session or resuming long-term writing to summariz
 
 ## Purpose
 Apply session handoff discipline to preserve research context, active draft state, unverified citations, active thought context, and pending literature checks across long writing sessions and AI Agent context resets. Supports multi-paper repositories by routing handoff records to the appropriate paper-specific or root-level file.
+
+## Invariant (v2.3.0): Commit → Log
+
+> **Invariant**: **Whenever you create a Git commit, you MUST append a row to `docs/<paper-id>/design/test-cases.md` §5 Session Log.** Do not wait for session end.
+
+| Timing | Required action |
+| :--- | :--- |
+| **Before commit** (recommended) | Complete Step 2 identity checklist and draft the §5 row |
+| **After commit** | Record the final commit hash(es) in the §5 "Related commits" column |
+
+- Multiple commits in one session: **append hashes to the same row** if agent/model and work theme are unchanged; **add a new row** after a model switch or major theme change.
+- Commits to `scholarly-agent-skills` alone still get recorded in the paper project's §5 related-commits column when they support that paper.
 
 ## Trigger Conditions
 - At the end of each working session

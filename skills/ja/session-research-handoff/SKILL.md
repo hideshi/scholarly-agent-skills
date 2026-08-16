@@ -1,6 +1,6 @@
 ---
 name: session-research-handoff
-version: 2.1.0
+version: 2.1.1
 description: 作業セッションの終了時・長期執筆の再開時に、研究文脈・未解決課題・確認待ち文献・思考途中状態を引き継ぎロードするスキル。複数論文リポジトリにおける論文固有/横断の文脈書き分けに対応。
 ---
 
@@ -67,8 +67,13 @@ description: 作業セッションの終了時・長期執筆の再開時に、�
 
 ## 7. 実行環境 (Execution Environment)
 再現性・監査可能性の確保のため、セッションの実行環境を必ず記録する。
-- **エージェント / モデル**: 例) Cursor (Kimi K3), Claude Code (Opus 4.8), Antigravity
-- **実行日**: YYYY-MM-DD
+
+- **エージェント（実行環境）**: 例) Cursor, Claude Code, Antigravity
+- **モデル**: 「プロバイダ / モデル名 / バージョン」の粒度で記録する
+  - 例) Anthropic / Claude Opus / 4.x, Google / Gemini / Flash, Moonshot AI / Kimi / K3
+  - ※エージェントとモデルは1対1で固定されない（例: Antigravity 上で Claude Opus や Gemini Flash を選択可能）。必ず別項目として記録すること
+  - ※正確なバージョンが不明な場合は、ツールのモデル選択UIに表示されている名称をそのまま記録する
+- **実行日**: YYYY-MM-DD（同一モデル名でもプロバイダ側で更新され得る（モデルドリフト）ため、日付が事実上の版情報となる）
 - **主要プロンプト・指示**: 例) 「第3章の仮説検証を手伝って」
 - **関連コミット**: 例) `abc1234` (対話内容と成果物の突合を可能にする監査証跡)
 ```

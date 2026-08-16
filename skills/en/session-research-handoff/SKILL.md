@@ -1,6 +1,6 @@
 ---
 name: session-research-handoff
-version: 2.1.0
+version: 2.1.1
 description: Use when ending a session or resuming long-term writing to summarize and restore research context, open questions, active thought state, and pending tasks. Supports multi-paper repositories with context-aware routing.
 ---
 
@@ -67,8 +67,13 @@ When managing multiple papers in a single repository, determine the target file 
 
 ## 7. Execution Environment
 Always record the session's execution environment to ensure reproducibility and auditability.
-- **Agent / Model**: e.g., Cursor (Kimi K3), Claude Code (Opus 4.8), Antigravity
-- **Date**: YYYY-MM-DD
+
+- **Agent (runtime environment)**: e.g., Cursor, Claude Code, Antigravity
+- **Model**: record at the granularity of "Provider / Model name / Version"
+  - e.g., Anthropic / Claude Opus / 4.x, Google / Gemini / Flash, Moonshot AI / Kimi / K3
+  - Note: agents and models are not fixed 1:1 (e.g., Antigravity can run Claude Opus or Gemini Flash). Always record them as separate fields.
+  - If the exact version is unknown, record the name exactly as shown in the tool's model selector UI.
+- **Date**: YYYY-MM-DD (providers may update a model under the same name — model drift — so the date serves as de facto version information)
 - **Main Prompts / Instructions**: e.g., "Help me test the Chapter 3 hypothesis"
 - **Related Commits**: e.g., `abc1234` (audit trail linking dialogue to artifacts)
 ```

@@ -1,16 +1,21 @@
-# Repository Documentation Taxonomy Standard (標準 docs/ 成果物4分類構造)
+# Repository Documentation Taxonomy Standard (標準 docs/ 成果物5分類構造)
 
 本ドキュメントは、学術論文リポジトリにおける `docs/` 配下の公式成果物分類構造（Single Source of Truth）を定義する。
+複数論文を同一リポジトリで管理する場合は `docs/<paper-id>/` 配下に本構造を適用する。
 
 ---
 
-## 📂 4分類標準ディレクトリ構造
+## 📂 5分類標準ディレクトリ構造
 
-すべての AI エージェントスキル、ルール、スクリプトは、生成・参照する成果物を以下の4サブディレクトリに分類して配置しなければならない。
+すべての AI エージェントスキル、ルール、スクリプトは、生成・参照する成果物を以下の5サブディレクトリに分類して配置しなければならない。
 
 ```text
-docs/
-├── chapters/              # 論文本文の各章原稿 (Drafts & Manuscripts)
+docs/[paper-id]/ (または docs/)
+├── manuscript/            # 完成論文原稿・ビルド成果物 (Final Paper Outputs & Rendered Formats: .md, .html, .pdf)
+│   ├── [paper_title].md
+│   ├── [paper_title].html
+│   └── [paper_title].pdf
+├── chapters/              # 論文本文の各章原稿 (Drafts & Chapter Manuscripts)
 │   ├── chapter1-introduction.md
 │   ├── chapter2-macro-and-labor.md
 │   └── ...
@@ -34,5 +39,7 @@ docs/
 ---
 
 ## 規則
-- 各スキルは必ず上記4分類のサブディレクトリをターゲットとして成果物を出力しなければならない。
-- `docs/` 直下に孤立した `.md` ファイルを直接作成することは原則禁止とする。
+- 各スキル・スクリプトは必ず上記5分類のサブディレクトリをターゲットとして成果物を出力しなければならない。
+- 論文の最終ビルド・エクスポート成果物（統合.md、HTML、PDF）は、必ず **`manuscript/`** ディレクトリへ出力・保存する。
+- `docs/` や `docs/[paper-id]/` 直下に孤立した `.md`, `.html`, `.pdf` ファイルを直接作成・放置することは原則禁止とする。
+

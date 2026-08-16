@@ -300,7 +300,20 @@ def main():
         print(f"Error: Input file {args.input_md} does not exist.", file=sys.stderr)
         sys.exit(1)
 
-    out_pdf = args.output if args.output else args.input_md.with_suffix(".pdf")
+    if args.output:
+        out_pdf = args.output
+    else:
+        # Auto-detect manuscript/ output directory if available
+        parent_dir = args.input_md.parent
+        manuscript_dir = parent_dir / "manuscript" if parent_dir.name != "manuscript" else parent_dir
+        if not manuscript_dir.exists() and (parent_dir.parent / "manuscript").exists():
+            manuscript_dir = parent_dir.parent / "manuscript"
+        
+        if manuscript_dir.exists():
+            out_pdf = manuscript_dir / args.input_md.with_suffix(".pdf").name
+        else:
+            out_pdf = args.input_md.with_suffix(".pdf")
+
     is_pdf, kind = convert_md_to_pdf(args.input_md, out_pdf)
     if not is_pdf:
         print(f"Warning: PDF conversion failed or fallback to HTML ({kind}).", file=sys.stderr)

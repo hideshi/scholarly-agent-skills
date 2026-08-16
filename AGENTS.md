@@ -52,13 +52,14 @@ python3 /path/to/scholarly-agent-skills/scripts/link_shared_skills.py /path/to/t
 
 ## 📂 成果物（Artifacts）の Git 運用指針と標準 `docs/` ディレクトリ構造
 
-論文リポジトリにおける成果物は、可読性と整理整頓のため以下の4分類構成で管理することを推奨します：
+論文リポジトリにおける成果物は、可読性と整理整頓のため以下の5分類構成で管理することを推奨します（複数論文を同一リポジトリで管理する場合は `docs/<paper-id>/` 配下に本構造を配置）：
 
+- `docs/manuscript/` (または `docs/<paper-id>/manuscript/`): 完成論文原稿・ビルド成果物 (`[paper_title].md`, `[paper_title].html`, `[paper_title].pdf`)
 - `docs/chapters/`: 論文本文の各章原稿 (`chapter1-introduction.md`, `chapter2-macro-and-labor.md` 等)
 - `docs/design/`: 論文設計・構成・防衛インベントリ (`paper-outline.md`, `test-cases.md`, `domain-concepts.md`, `evidence-gate-report.md`)
 - `docs/literature/`: 文献調査・用語集・論文ノート (`literature-matrix.md`, `literature-gap-report.md`, `bilingual-glossary.md`, `papers/*.md`)
 - `docs/data/`: 取得データ・統計集計成果物 (`philippines-poverty-data.md` 等)
 
-- **コミット推奨**: スキルによって生成される上記 `docs/` 配下の報告書・インベントリ・本文草稿は、論文のトレーサビリティ確保と共同研究者との文脈共有のため、**Git リポジトリへコミットしてバージョン管理することを推奨**します。
+- **コミット推奨**: スキルによって生成される上記 `docs/` 配下の報告書・インベントリ・本文草稿・完成原稿 (manuscript) は、論文のトレーサビリティ確保と共同研究者との文脈共有のため、**Git リポジトリへコミットしてバージョン管理することを推奨**します。
 - **コミット厳禁（要除外）**: 生の調査データ（`raw_data/`）および PII マッピング用ファイル（`mapping.json` 等）は、プライバシー・セキュリティ保護のため `.gitignore` および `python3 scripts/setup_ai_ignore.py` による AI Ignore 対象に設定し、コミットしないでください。
 

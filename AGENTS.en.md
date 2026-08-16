@@ -50,15 +50,15 @@ python3 /path/to/scholarly-agent-skills/scripts/link_shared_skills.py /path/to/t
 
 ---
 
-## 📂 Artifact Git Management Policy & Standard `docs/` Taxonomy
+## 📂 Artifacts Git Operation & Standard `docs/` Taxonomy
 
-Outputs in paper repositories are recommended to be organized into the following 4 subdirectories:
+Artifacts in paper repositories are recommended to be organized into the following 5-category structure for maximum readability (when managing multiple papers in a single repo, place this structure under `docs/<paper-id>/`):
 
+- `docs/manuscript/` (or `docs/<paper-id>/manuscript/`): Final paper outputs and rendered formats (`[paper_title].md`, `[paper_title].html`, `[paper_title].pdf`)
 - `docs/chapters/`: Chapter drafts and manuscript sections (`chapter1-introduction.md`, `chapter2-macro-and-labor.md`)
-- `docs/design/`: Thesis architecture, outlines, and TDD validation inventories (`paper-outline.md`, `test-cases.md`, `domain-concepts.md`, `evidence-gate-report.md`)
-- `docs/literature/`: Literature matrices, gap analysis, glossaries, and paper notes (`literature-matrix.md`, `literature-gap-report.md`, `bilingual-glossary.md`, `papers/*.md`)
-- `docs/data/`: Processed datasets and indicator tables (`philippines-poverty-data.md`)
+- `docs/design/`: Paper outline, test cases, domain concepts, evidence gate reports (`paper-outline.md`, `test-cases.md`, `domain-concepts.md`, `evidence-gate-report.md`)
+- `docs/literature/`: Literature matrix, gap reports, glossary, paper reading notes (`literature-matrix.md`, `literature-gap-report.md`, `bilingual-glossary.md`, `papers/*.md`)
+- `docs/data/`: Empirical datasets and aggregated statistics (`philippines-poverty-data.md`)
 
-- **Recommended to Commit**: Generated reports, matrices, and inventories under `docs/` should be **committed to Git** to preserve manuscript traceability and facilitate context sharing among co-authors.
-- **Do NOT Commit**: Raw research data (`raw_data/`, `transcripts_raw/`) and PII mapping files (`mapping.json`) must remain gitignored and AI ignored (`python3 scripts/setup_ai_ignore.py`) for privacy and security protection.
-
+- **Commit Recommended**: Output files in `docs/` (including reports, inventories, chapter drafts, and rendered manuscripts) should be **committed to Git** for traceability and collaboration.
+- **Commit Forbidden (Must Ignore)**: Raw dataset files (`raw_data/`) and PII mapping files (`mapping.json`) MUST be ignored via `.gitignore` and `python3 scripts/setup_ai_ignore.py` to prevent privacy/security leaks.protection.

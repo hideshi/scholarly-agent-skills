@@ -28,7 +28,7 @@ Extract core domain terms into `docs/design/domain-concepts.md`:
 ```
 
 ### Step 1.5: Idea Explosion Capture
-If the user mentions tangential ideas, hypotheses, or inspirations during concept definition dialogue, the agent must not discard them. Instead, append them to the end of `docs/design/domain-concepts.md` in the following format:
+If the user mentions tangential ideas, hypotheses, or inspirations during concept definition dialogue, the agent must not discard them. Instead, append them to the end of `docs/<paper-id>/design/domain-concepts.md` (or `docs/design/domain-concepts.md`) in the following format:
 
 ```markdown
 ## Unsorted Idea Pool
@@ -39,7 +39,7 @@ If the user mentions tangential ideas, hypotheses, or inspirations during concep
 This safely captures ideas overflowing from working memory without disrupting the main task (concept definition). Implements [Cognitive Scaffolding Rule S2](../../../rules/en/cognitive-scaffolding-rule.md).
 
 ### Step 2: Automated Term Consistency Check
-During drafting and review, the AI Agent verifies that:
+During drafting and review, the AI Agent verifies `docs/<paper-id>/design/domain-concepts.md` (or `docs/design/domain-concepts.md`) to check that:
 1. Defined concepts are not used with meanings that conflict with their definitions.
 2. Near-synonyms are not unconsciously substituted for defined terms.
 3. The agent reflects the user's recent statements back ("You're using this term to mean X, correct?") and checks for discrepancies with the definition (S2: Metacognitive Mirroring).

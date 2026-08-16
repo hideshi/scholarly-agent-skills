@@ -27,7 +27,7 @@ description: 論文構成時・新概念の導入時に、多義的な学術概�
 ```
 
 ### Step 1.5: アイデア爆発キャプチャ（Idea Explosion Capture）
-概念定義の対話中にユーザーが派生的なアイデア・仮説・着想を口走った場合、エージェントはそれを捨てず、`docs/design/domain-concepts.md` の末尾に以下の形式で自動追記する：
+概念定義の対話中にユーザーが派生的なアイデア・仮説・着想を口走った場合、エージェントはそれを捨てず、`docs/<paper-id>/design/domain-concepts.md`（または `docs/design/domain-concepts.md`）の末尾に以下の形式で自動追記する：
 
 ```markdown
 ## 未整理アイデアプール (Unsorted Idea Pool)
@@ -38,7 +38,7 @@ description: 論文構成時・新概念の導入時に、多義的な学術概�
 会話の主軸（概念定義作業）を崩さずに、ワーキングメモリから溢れた発想を安全にキャプチャする（[認知スキャフォールディング原則 S2](../../../rules/ja/cognitive-scaffolding-rule.md) の実装）。
 
 ### Step 2: テキストの自動概念監査
-下書きテキストの執筆・校正時、AIは `docs/design/domain-concepts.md` を参照し、以下をチェックする：
+下書きテキストの執筆・校正時、AIは `docs/<paper-id>/design/domain-concepts.md`（または `docs/design/domain-concepts.md`）を参照し、以下をチェックする：
 1. 定義した概念が、定義と異なる意味で曖昧に使用されていないか。
 2. 近似の別単語と無自覚に混同・置換されていないか。
 3. ユーザーの直近の発言内容を「〇〇という意味で使っていますね？」とリフレクションし、定義との齟齬がないか確認する（S2: メタ認知ミラーリング）。

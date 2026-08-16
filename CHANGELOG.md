@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.5.0] - 2026-08-16
+
+### Added
+- **`pre-reading-briefing`** (ja/en): Reading-side cognitive scaffolding skill that generates a per-section pre-reading briefing (purpose, prerequisite concepts, main claim, anticipated objection, comprehension check question) before the review/revision phase (PH-REV). Implements the top development priority proposed in the cognitive-scaffolding paper's conclusion (§6.2.3): addressing the production/comprehension asymmetry (§5.1.4) by extending M1 mirroring to the reading side and separating production/comprehension metrics.
+
+---
+
 ## [1.4.0] - 2026-08-15
 
 ### Added

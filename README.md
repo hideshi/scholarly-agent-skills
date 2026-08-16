@@ -24,6 +24,7 @@
 - **`academic-paper-translation`**: 設定ファイルの自国語に基づき、外国語論文を対照翻訳・用語対照表（Glossary）付きで構造化変換。
 - **`citation-traceability-audit`**: 本文中の全主張が出典（脚注・参考文献）と1対1で対応しているか自動監査。
 - **`session-research-handoff`**: セッション間や長期執筆における文脈・未解決課題・確認待ち文献の引き継ぎ。
+- **`pre-reading-briefing`**: 草稿の通読・査読共有の前に、節ごとの前提・主張・想定反論を提示し校閲期の読解コストを下げる。
 - **`submission-venue-advisor`**: 分野・言語・目的に応じた提出先（プレプリントサーバー等）の選定と投稿手順を案内する。
 
 カタログの全文は [`skills/ja/README.md`](skills/ja/README.md) / [`skills/en/README.md`](skills/en/README.md) を参照してください。

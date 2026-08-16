@@ -24,6 +24,7 @@ This repository provides **tool-agnostic AI agent skills and rules** that functi
 - **`academic-paper-translation`**: Translate foreign papers into configured native language with bilingual glossaries and parallel paragraphs.
 - **`citation-traceability-audit`**: Audit 1-to-1 matching between body text claims, footnotes, and bibliography references.
 - **`session-research-handoff`**: Maintain research context and unverified claims across long writing sessions.
+- **`pre-reading-briefing`**: Present per-section prerequisites, claims, and anticipated objections before draft read-through, lowering review-phase comprehension cost.
 - **`submission-venue-advisor`**: Recommend a submission venue (preprint server / repository) by field, language, and publication goal.
 
 See the full catalogs in [`skills/ja/README.md`](skills/ja/README.md) and [`skills/en/README.md`](skills/en/README.md).

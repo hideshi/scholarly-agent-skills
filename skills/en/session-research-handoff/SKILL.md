@@ -1,6 +1,6 @@
 ---
 name: session-research-handoff
-version: 2.1.1
+version: 2.2.0
 description: Use when ending a session or resuming long-term writing to summarize and restore research context, open questions, active thought state, and pending tasks. Supports multi-paper repositories with context-aware routing.
 ---
 
@@ -35,7 +35,21 @@ When managing multiple papers in a single repository, determine the target file 
 
 - **Pointer rule**: The root `docs/session-handoff.md` must **always** contain pointers to paper-specific handoff files when they exist.
 
-### Step 2: Generate Handoff Report
+### Step 2: Execution Environment Identity Verification (Pre-Recording Checklist)
+
+Before writing execution environment data to a handoff file or session log (e.g., `test-cases.md` §5), complete the checklist below. **Do not copy the previous log row** — model switches can occur within the same chat.
+
+| # | Check | Procedure |
+| :-: | :--- | :--- |
+| 1 | **Self-identification** | Confirm the model name from conversation context (e.g., Composer) |
+| 2 | **UI verification** | If uncertain, transcribe the name exactly as shown in the tool's model selector UI |
+| 3 | **User confirmation** | If still unknown, ask the user one question before recording (do not guess) |
+| 4 | **Row separation** | After a model switch, always add a **new row** (no appending or overwriting existing rows) |
+| 5 | **Prohibition** | Do not infer the model from a prior session log row or handoff §7 entry |
+
+> **Typical failure (Phase 3)**: Under multi-model use, an agent copies the previous row (e.g., Kimi K3) while the actual session ran on Composer. This checklist prevents that "ungrounded recording subject" failure mode.
+
+### Step 3: Generate Handoff Report
 
 #### Paper-Specific Handoff Template (`docs/<paper-id>/session-handoff.md`)
 
@@ -70,7 +84,7 @@ Always record the session's execution environment to ensure reproducibility and 
 
 - **Agent (runtime environment)**: e.g., Cursor, Claude Code, Antigravity
 - **Model**: record at the granularity of "Provider / Model name / Version"
-  - e.g., Anthropic / Claude Opus / 4.x, Google / Gemini / Flash, Moonshot AI / Kimi / K3
+  - e.g., Cursor / Composer / 2.5, Anthropic / Claude Opus / 4.x, Google / Gemini / Flash, Moonshot AI / Kimi / K3
   - Note: agents and models are not fixed 1:1 (e.g., Antigravity can run Claude Opus or Gemini Flash). Always record them as separate fields.
   - If the exact version is unknown, record the name exactly as shown in the tool's model selector UI.
 - **Date**: YYYY-MM-DD (providers may update a model under the same name — model drift — so the date serves as de facto version information)
@@ -97,7 +111,7 @@ Always record the session's execution environment to ensure reproducibility and 
 → Resume with `adhd-ai` Chapter 3 (closer deadline)
 ```
 
-### Step 3: Resume from Handoff
+### Step 4: Resume from Handoff
 At the start of a new session, the agent restores context in this order:
 
 1. Read `docs/session-handoff.md` (root) if it exists to identify active papers.

@@ -1,6 +1,6 @@
 ---
 name: counter-argument-tdd
-version: 1.3.0
+version: 1.4.0
 description: 節・パラグラフ執筆前や新たな主張構築時に、想定反論・反例を定義し、それを乗り越える論理構成で執筆するスキル
 ---
 
@@ -48,6 +48,13 @@ description: 節・パラグラフ執筆前や新たな主張構築時に、想�
 - ① **変化のペース・弾力性（Pace & Elasticity）**: 背景指標（マクロGDP等）の大きな変化に対して、数値の改善速度が緩慢すぎないか。（例: 高成長に対する不平等改善の遅さ）
 - ② **絶対水準の評価（Absolute Benchmark Evaluation）**: 数値変化後の到達点自体が、なお国際的・学術的・臨床的な警戒線（閾値）を実質的に超過していないか。
 - ③ **変化の構成要因分解（Factor Decomposition）**: 数値変化の主因が一次市場所得の構造的改善か、一時的な政策財政移転（4Ps給付等）や測定手法の改定によるものか。
+
+#### 3. 派閥チェック（Faction Check）
+反論リストの作成時、`docs/<paper-id>/literature/literature-matrix.md`（単一論文リポジトリでは `docs/literature/literature-matrix.md`）の係争ステータス列を確認し、以下を実施する：
+- `contested` / `contradicted` の文献・命題に依拠した主張がある場合、**対立陣営の代表文献からの反論を最低1件**テストケースとして列挙する。
+- 係争ステータスが `unknown` のままの屋台骨主張がある場合、`literature-search` Step 1.5（対立陣営探索）への差し戻しを検討する。
+
+*※本チェックは「想像の反論」を「実在の反論」で補強し、[claim-evidence-gate](../claim-evidence-gate/SKILL.md) の `Field Disagreement` 軸の事前検証として機能する。*
 
 ### Phase 2: 反論を包摂・克服する本文執筆
 AIと共同で本文を記述する際、上記で定義した反論リストを一つずつクリアするように文章を構成する：

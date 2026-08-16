@@ -1,6 +1,6 @@
 ---
 name: source-criticism-gate
-version: 1.0.0
+version: 1.1.0
 description: Use when evaluating the trustworthiness of external websites, research data, or cited literature to audit and select Tier 1/Tier 2 academic sources.
 ---
 
@@ -25,6 +25,15 @@ Automatically audit and classify external URLs, datasets, and literature sources
 - **Personal Blogs, Social Media, Forums**: Note, Qiita, X (Twitter), Reddit
 - **Wikipedia / Encyclopedias**: Direct citations prohibited (trace back to the primary paper instead)
 - **Anonymous Media / Commercial Marketing Sites**: Unverified summary articles, affiliate content
+
+---
+
+## Scope Note (Disputes Within Tier 1)
+
+This gate evaluates the trustworthiness of the **source type** only; it does not assess scholarly disputes, contestation status, or retractions within Tier 1 (peer-reviewed) literature. Those are handled through the following division of labor:
+
+- **Discovering and recording opposing camps**: `literature-search` Step 1.5 (Faction Discovery) and the "Position / Camp" and "Contestation Status" columns of `literature-matrix.md`
+- **Auditing claim tone**: the Field Disagreement axis of `claim-evidence-gate`
 
 ---
 

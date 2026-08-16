@@ -1,6 +1,6 @@
 ---
 name: scholarly-concept-modeling
-version: 1.0.0
+version: 1.1.0
 description: Use during paper design or novel concept definition to build a domain model dictionary (DDD Ubiquitous Language) and prevent terminological confusion
 ---
 
@@ -25,6 +25,7 @@ Extract core domain terms into `docs/design/domain-concepts.md`:
 - **Bounded Context**: Chapters 2 through 4 (Sociological Analysis).
 - **Disambiguation**: Distinct from *Free Will* (philosophical) and *Behavior* (empirical psychology).
 - **Contrast with Prior Literature**: Diverges from Smith (2018), who defines agency purely as a structural effect.
+- **Contrast with Prior Empirical Claims**: When peer-reviewed disagreement exists not over the definition but over an empirical proposition involving the concept (e.g., "X promotes Y"), record the camps and representative papers (e.g., proponent camp Smith 2018 vs. opponent camp Jones 2020). Keep consistent with the Contestation Status column of `literature-matrix.md`.
 ```
 
 ### Step 1.5: Idea Explosion Capture

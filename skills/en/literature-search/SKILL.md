@@ -1,7 +1,7 @@
 ---
 name: literature-search
-version: 1.0.0
-description: Use during research planning or literature search phase to query open-access paper databases (OpenAlex, arXiv, Crossref, Semantic Scholar) and build literature matrices
+version: 1.1.0
+description: Use during research planning or literature search phase to query open-access paper databases (OpenAlex, arXiv, Crossref, Semantic Scholar), discover opposing scholarly factions, and build literature matrices with contestation status
 ---
 
 # Multi-Provider Literature Search Skill
@@ -55,8 +55,38 @@ python3 scripts/search_literature.py --query "hermeneutics" --provider openalex 
 > [!NOTE]
 > When running inside a submodule deployment, prefix script paths with `.scholarly-agent-skills/` (e.g. `python3 .scholarly-agent-skills/scripts/search_literature.py`).
 
+### Step 1.5: Faction Discovery
+
+When a key claim or theory (especially one load-bearing for the thesis) is found, actively search for **opposing peer-reviewed literature** using the following methods:
+
+1. **Refutation queries**: For claim X, run queries such as `"X" AND (critique OR criticism OR replication OR "failed to replicate" OR comment OR reply)` to find objections, replications, and comment papers.
+2. **Citation networks**: Scan the citing literature of core papers (e.g., OpenAlex `cited_by`) for "Comment on" / "Reply to" / Retraction Notes / meta-analyses and systematic reviews.
+3. **Retraction & correction check**: Verify that core papers are not Retracted or under an Expression of Concern (in OpenAlex, retracted works carry "RETRACTED ARTICLE" in the title). This prevents citing retracted work as established knowledge.
+4. **Faction identification**: When a dispute is found, identify the representative papers and proponents of each camp and record them in the matrix's "Position / Camp" column.
+
+> The anticipated objections in `counter-argument-tdd` rely on "imagined objections". This step excavates "real objections" from the literature, grounding reviewer-proofing, claim-tone calibration, and novelty positioning.
+
 ### Step 2: Populate the Literature Matrix
 Append high-relevance results to `docs/literature/literature-matrix.md` and pass them to `literature-gap-analysis` (Literature Gap Analysis) for downstream processing.
+
+#### Matrix Record Format (v1.1.0 extension)
+
+Record each paper with the following columns:
+
+```markdown
+| # | Paper | Relevance | Position / Camp | Contestation Status | Relevance to This Project |
+```
+
+- **Position / Camp**: The school of thought, theoretical stance, or approach the paper belongs to (e.g., functionalist account / by-product theory; econometric camp / philological camp)
+- **Contestation Status**: One of the following labels
+  - `consensus`: Broadly accepted within the field
+  - `replicated`: Independent replications exist
+  - `contested`: Opposing peer-reviewed objections or counter-evidence exist (**must be acknowledged in the manuscript**)
+  - `contradicted`: Large-scale counter-evidence or negative meta-analyses exist (**must not be cited as established fact**)
+  - `retraction-watch`: Subject of retraction, correction, or Expression of Concern monitoring
+  - `unknown`: Not yet investigated (default; investigate via Step 1.5 before assigning for load-bearing claims)
+
+> The Field Disagreement axis of `claim-evidence-gate` reads this column to judge whether claim tone is warranted.
 
 ## Outputs
 - Updated `docs/literature/literature-matrix.md`

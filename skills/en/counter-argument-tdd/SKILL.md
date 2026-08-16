@@ -1,6 +1,6 @@
 ---
 name: counter-argument-tdd
-version: 1.3.0
+version: 1.4.0
 description: Use before drafting sections or paragraphs to enumerate counter-arguments and draft resolutions that withstand peer review
 ---
 
@@ -48,6 +48,13 @@ When using statistical trends or comparative figures in your argument, evaluate 
 - ① **Pace & Elasticity**: Is the rate of change sluggish relative to background macroeconomic growth? (e.g., slow inequality reduction despite high GDP growth).
 - ② **Absolute Benchmark Evaluation**: Does the post-change level still touch or exceed international, clinical, or academic warning thresholds?
 - ③ **Factor Decomposition**: Is the numerical change driven by structural market income convergence or temporary fiscal transfers (4Ps) / measurement revisions?
+
+#### 3. Faction Check
+When listing objections, consult the Contestation Status column of `docs/<paper-id>/literature/literature-matrix.md` (or `docs/literature/literature-matrix.md` in single-paper repositories):
+- If any claim relies on `contested` / `contradicted` literature or propositions, **enumerate at least one objection drawn from the opposing camp's representative papers** as a test case.
+- If a load-bearing claim remains `unknown`, consider returning to `literature-search` Step 1.5 (Faction Discovery).
+
+*Note: This check reinforces "imagined objections" with "real objections" and functions as pre-validation for the `Field Disagreement` axis in [claim-evidence-gate](../claim-evidence-gate/SKILL.md).*
 
 ### Phase 2: Draft Resolution
 Draft text incorporating Topic-Sentence-First structure, directly resolving each listed objection:

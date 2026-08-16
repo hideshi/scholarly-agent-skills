@@ -1,6 +1,6 @@
 ---
 name: claim-evidence-gate
-version: 1.3.2
+version: 1.4.0
 description: Use when validating claims against primary sources, empirical data, or citation evidence prior to submission or peer review
 ---
 
@@ -25,9 +25,9 @@ Apply invariant validation discipline to verify that every thesis claim in the m
    - *Note: Execute `python3 scripts/check_fact_grounding.py` as a pre-filter candidate extractor.*
 2. Pair each claim with its corresponding primary data, citation, footnote, or `docs/data/` table ID.
 
-### Step 2: Six-Axis Rubric & Scoring
+### Step 2: Seven-Axis Rubric & Scoring
 
-Score each claim–evidence pair into **PASS**, **WARN**, **FAIL**, or **N/A** across six axes:
+Score each claim–evidence pair into **PASS**, **WARN**, **FAIL**, or **N/A** across seven axes:
 
 | Evaluation Axis | PASS (Valid) | WARN (Tone Adjustment Needed) | FAIL (Unsubstantiated / Rejected) |
 |---|---|---|---|
@@ -37,10 +37,12 @@ Score each claim–evidence pair into **PASS**, **WARN**, **FAIL**, or **N/A** a
 | **Modality Alignment** | Claim tone matches evidence strength | Modality is slightly too strong for sample size | Overgeneralized despite weak sample without hedging |
 | **Benchmark Grounding** | Comparative or degree evaluation terms include objective benchmarks at first occurrence | Comparative benchmark is partially insufficient or reference is ambiguous | Evaluative terms used (e.g. "high", "pronounced") without any benchmark |
 | **Internal Heterogeneity** | Internal differentiation of the analyzed group (skill level, region, gender, etc.) is appropriately addressed | Group is treated as homogeneous but heterogeneity is acknowledged in footnotes | Macro aggregates only; internal group differentiation is ignored |
+| **Field Disagreement** | Contested claims acknowledge opposing views in the text, or the proposition is confirmed as `consensus` / `replicated` in `literature-matrix.md` | The point is contested (`contested` / `contradicted`) but opposing views appear only in footnotes, or tone remains slightly too strong despite acknowledgment | A contested proposition is asserted on a single paper with no mention of opposing views, or a `contradicted` / `retraction-watch` source is cited as established knowledge |
 
 #### ⚠️ N/A (Not Applicable) Rules
 - **Internal Heterogeneity Axis**: For claims that do not target social groups or specific categories (e.g., conceptual analysis, textual/philological interpretation, chronological dating, mathematical proofs), score this axis as **N/A**.
 - **Benchmark Grounding Axis**: For purely factual descriptive statements that contain no degree or comparative evaluative terms (e.g., "The treaty was signed in 1945"), score this axis as **N/A**.
+- **Field Disagreement Axis**: For factual statements where dispute cannot arise (dates, reported values from official statistics, etc.) or for claims proposing genuinely novel concepts with no prior literature, score this axis as **N/A**. Also score N/A when the contestation status is `unknown`; however, if a load-bearing claim (research question, core causal claim) remains `unknown`, recommend running `literature-search` Step 1.5 (Faction Discovery).
 
 #### Benchmark Grounding Axis Detailed Rules
 When using comparative or degree terms such as "high", "low", "significant", "pronounced", "substantial", "large", "majority", or "pronounced increase" at first occurrence, at least one of the following benchmarks must be explicitly specified:

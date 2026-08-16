@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.6.0] - 2026-08-17
+
+### Added
+- **Faction & contestation tracking** (ja/en): mechanisms to record and audit scholarly disputes *within* Tier 1 (peer-reviewed) literature, which the Tier system previously treated as flat.
+  - `literature-search` (v1.1.0): new Step 1.5 "Faction Discovery" (refutation queries, citation-network scan, retraction/correction checks, camp identification) and extended literature-matrix format with "Position / Camp" and "Contestation Status" columns (`consensus` / `replicated` / `contested` / `contradicted` / `retraction-watch` / `unknown`).
+  - `claim-evidence-gate` (v1.4.0): new seventh rubric axis "Field Disagreement" — FAILs claims that assert contested propositions from a single source without acknowledging opposing views, or that cite `contradicted` / `retraction-watch` literature as established knowledge.
+  - `counter-argument-tdd` (v1.4.0): new Phase 1 "Faction Check" requiring at least one objection drawn from the opposing camp's representative papers when claims rely on `contested` / `contradicted` literature.
+  - `scholarly-concept-modeling` (v1.1.0): new "Contrast with Prior Empirical Claims" field to record proposition-level (not only definitional) disputes.
+  - `source-criticism-gate` (v1.1.0): scope note clarifying that Tier judgments cover source types only; within-Tier-1 disputes are delegated to the skills above.
+
+---
+
 ## [1.5.0] - 2026-08-16
 
 ### Added

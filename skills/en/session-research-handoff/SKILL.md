@@ -1,6 +1,6 @@
 ---
 name: session-research-handoff
-version: 2.4.0
+version: 2.5.0
 description: Use when ending a session or resuming long-term writing to summarize and restore research context, open questions, active thought state, and pending tasks. Supports multi-paper repositories with context-aware routing.
 ---
 
@@ -9,16 +9,22 @@ description: Use when ending a session or resuming long-term writing to summariz
 ## Purpose
 Apply session handoff discipline to preserve research context, active draft state, unverified citations, active thought context, and pending literature checks across long writing sessions and AI Agent context resets. Supports multi-paper repositories by routing handoff records to the appropriate paper-specific or root-level file.
 
-## Invariant (v2.4.0): Agent / Model in Commit Messages
+## Invariant (v2.5.0): Commit Message Language and Agent / Model Recording
 
 > **Invariant**: **Every Git commit MUST end with `Agent:` and `Model:` lines.** Routine model traceability uses `git log` as the source of truth; §5 double-logging is not required.
+
+### Commit message language (added in v2.5.0)
+
+- **Write the subject and body in the executor's native language.** Follow `native_language` in `config/user_preferences.json` (e.g., if `"Japanese"`, write commit messages in Japanese).
+- Applies both to commits in the target (paper-writing) repository and to scholarly-agent-skills itself.
+- Machine-readable trailers such as `Agent:` / `Model:` keep English keys and values for portability.
 
 ### Required commit message footer
 
 ```text
-<subject>
+<subject (native language)>
 
-<body (optional)>
+<body (optional; native language)>
 
 Agent: Cursor
 Model: Cursor / Composer / 2.5

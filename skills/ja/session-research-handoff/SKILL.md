@@ -1,6 +1,6 @@
 ---
 name: session-research-handoff
-version: 2.4.0
+version: 2.5.0
 description: 作業セッションの終了時・長期執筆の再開時に、研究文脈・未解決課題・確認待ち文献・思考途中状態を引き継ぎロードするスキル。複数論文リポジトリにおける論文固有/横断の文脈書き分けに対応。
 ---
 
@@ -9,16 +9,22 @@ description: 作業セッションの終了時・長期執筆の再開時に、�
 ## 目的
 ソフトウェア開発におけるセッションハンドオーバーの手法を応用し、何ヶ月も続く長編論文執筆や研究プロジェクトにおいて、AIエージェントのコンテキスト制限を超えて文脈・執筆進捗・未解決の論点・思考途中状態をスムーズに引き継ぐ。複数論文を同一リポジトリで管理する場合の文脈書き分けにも対応する。
 
-## 不変条件（v2.4.0）: コミット message に Agent / Model を書く
+## 不変条件（v2.5.0）: コミット message の言語と Agent / Model 記録
 
 > **Invariant**: **Git コミットを作成するたびに、コミット message 末尾に `Agent:` と `Model:` 行を必ず付ける。** 通常のモデル追跡は `git log` が正本とし、§5 への二重記録は不要。
+
+### コミット message の言語（v2.5.0 追加）
+
+- **subject と body は実行者の自国語で記述する。** 自国語は `config/user_preferences.json` の `native_language` に従う（例: `"Japanese"` なら日本語で書く）。
+- 対象リポジトリ（論文執筆リポジトリ）へのコミットはもちろん、scholarly-agent-skills 側へのコミットでも同様とする。
+- `Agent:` / `Model:` 行などの機械可読トレーラーは、可搬性のため従来通り英語キー・英語値で記述する。
 
 ### 必須フォーマット（コミット message 末尾）
 
 ```text
-<subject>
+<subject（自国語）>
 
-<body（任意）>
+<body（任意・自国語）>
 
 Agent: Cursor
 Model: Cursor / Composer / 2.5

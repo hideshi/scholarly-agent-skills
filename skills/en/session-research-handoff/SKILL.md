@@ -1,46 +1,100 @@
 ---
 name: session-research-handoff
-version: 1.0.0
-description: Use when ending a session or resuming long-term writing to summarize and restore research context, open questions, and pending tasks
+version: 2.0.0
+description: Use when ending a session or resuming long-term writing to summarize and restore research context, open questions, active thought state, and pending tasks. Supports multi-paper repositories with context-aware routing.
 ---
 
 # Research Session Handoff Skill
 
 ## Purpose
-Apply session handoff discipline to preserve research context, active draft state, unverified citations, and pending literature checks across long writing sessions and AI Agent context resets. This ensures smooth continuity for multi-month research projects.
+Apply session handoff discipline to preserve research context, active draft state, unverified citations, active thought context, and pending literature checks across long writing sessions and AI Agent context resets. Supports multi-paper repositories by routing handoff records to the appropriate paper-specific or root-level file.
 
 ## Trigger Conditions
 - At the end of each working session
 - When the AI Agent context window limit is approaching
 - When transitioning to a different chapter or research sub-topic
+- When interrupting extended continuous work (hyperfocus interruption)
 
 ## Workflow
 
-### Step 1: Generate Handoff Artifact
-At the end of a session, output a structured state summary to `docs/session-handoff.md`:
+### Step 0: Hyperfocus Context Detection (S3 Principle)
+When the agent detects any of the following, it must immediately propose: "Shall I save your current thought context?"
+
+- The user explicitly requests to end or pause the session
+- Extended continuous work has been taking place
+- The topic shifts significantly (e.g., switching to a different paper or chapter)
+
+### Step 1: Target File Routing (Multi-Paper Context-Aware Routing)
+When managing multiple papers in a single repository, determine the target file based on the work context:
+
+| Case | Target File | Example |
+|---|---|---|
+| **Single-paper focus** | `docs/<paper-id>/session-handoff.md` | Deep in Chapter 3 hypothesis testing of ADHD paper |
+| **Cross-paper work** | `docs/session-handoff.md` (root) | Exploring whether Philippines paper methodology applies to ADHD paper |
+| **Parallel multi-paper** | Root summary + each `docs/<paper-id>/session-handoff.md` for details | ADHD literature survey + Philippines revision simultaneously |
+
+- **Pointer rule**: The root `docs/session-handoff.md` must **always** contain pointers to paper-specific handoff files when they exist.
+
+### Step 2: Generate Handoff Report
+
+#### Paper-Specific Handoff Template (`docs/<paper-id>/session-handoff.md`)
 
 ```markdown
-# Research Session Handoff Report
+# Research Session Handoff Report — [Paper Title / paper-id]
 
 ## 1. Current Status
 - **Completed Work**: First draft of Chapter 2 "Source A Analysis and Argumentation"
-- **Active File**: `manuscript/ch02.md`
+- **Active File**: `docs/<paper-id>/chapters/chapter2.md`
 
 ## 2. Applied Domain Concepts
-- 'Agency' definition: Applied 18th-century Enlightenment model (see `docs/design/domain-concepts.md`)
+- 'Agency' definition: Applied 18th-century Enlightenment model (see `docs/<paper-id>/design/domain-concepts.md`)
 
 ## 3. Pending Issues
 - [ ] Resolve conflict between Smith (2018) and Jones (2021) on the dating of Source B
 - [ ] Polish transition language into Chapter 3
 
 ## 4. Resume Protocol
-1. Load `docs/session-handoff.md`.
+1. Load this file.
 2. Resume from Pending Issue #1: Smith/Jones dating conflict.
+
+## 5. Active Thought Context
+- "If we interpret Source B's date using Smith's theory (1680s), it contradicts Chapter 4's argument, but Jones's theory (1710s) would be consistent" → verification not yet complete.
+- Undecided: scope of "economic transition" definition for Chapter 3 opening.
+
+## 6. Warm-Up Questions
+- "Last time you were comparing Smith's and Jones's theories on Source B dating. Do you want to proceed with the Jones interpretation?"
+- "Shall we finalize the scope of 'economic transition' for the Chapter 3 opening based on our previous discussion?"
 ```
 
-### Step 2: Resume from Handoff
-At the start of a new session, the user or AI Agent loads `docs/session-handoff.md` to restore essential research context and active work.
+#### Root Cross-Paper Handoff Template (`docs/session-handoff.md`)
+
+```markdown
+# Research Session Handoff Report — Repository Overview
+
+## Active Papers
+| Paper (paper-id) | Status | Detail File |
+|---|---|---|
+| `adhd-ai` | Drafting Chapter 3 | → `docs/adhd-ai/session-handoff.md` |
+| `philippines-poverty` | Awaiting revision | → `docs/philippines-poverty/session-handoff.md` |
+
+## Cross-Paper Open Items
+- [ ] Whether to reference Philippines paper's "cognitive offloading" concept in ADHD paper Chapter 2
+- [ ] Check for duplicate references across both papers
+
+## Recommended Starting Point
+→ Resume with `adhd-ai` Chapter 3 (closer deadline)
+```
+
+### Step 3: Resume from Handoff
+At the start of a new session, the agent restores context in this order:
+
+1. Read `docs/session-handoff.md` (root) if it exists to identify active papers.
+2. Load the relevant `docs/<paper-id>/session-handoff.md`.
+3. Present **Warm-Up Questions** (Section 6) to the user to facilitate thought context restoration.
+
+## Cognitive Scaffolding
+All interactions in this skill must follow the [Cognitive Scaffolding Rule](../../../rules/en/cognitive-scaffolding-rule.md) (S1–S4). S3 (Context Saving) is the core principle of this skill, prioritizing safe hyperfocus interruption and minimal context switch cost.
 
 ## Outputs
-- `docs/session-handoff.md`
-
+- `docs/session-handoff.md` (Root cross-paper summary)
+- `docs/<paper-id>/session-handoff.md` (Paper-specific detailed handoff)

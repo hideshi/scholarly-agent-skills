@@ -50,6 +50,11 @@ Ask only what is needed:
 
 Paraphrase the user's words and correct any mismatch. Do not finalize the research-question sentence in this turn.
 
+**Task Initiation Support (S1 Principle)**: If the user falls silent or appears confused, offer 2–3 **priming questions** to lower the initiation barrier:
+- "Is there a paper or article you read recently that stuck with you?"
+- "Have you noticed any contradiction or puzzle in your work or daily life?"
+- "Is there a topic you've been curious about but haven't had time to explore?"
+
 ### Turn 2: One-Sentence Research Question
 From Turn 1, offer **2–3 one-sentence research-question candidates**. Each candidate must:
 

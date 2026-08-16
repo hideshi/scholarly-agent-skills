@@ -21,10 +21,11 @@ Before drafting, verify the following environment prerequisites:
 1. **Skills installed**: This repository is available as a submodule (`.scholarly-agent-skills/`) or via symbolic link (see root `AGENTS.md` for setup).
 2. **Language configured**: [`config/user_preferences.json`](../../../config/user_preferences.json) is set to the user's writing language.
 3. **AI Ignore configured**: If handling raw or confidential data, `scripts/setup_ai_ignore.py` has been run to exclude them from AI indexing.
-4. **Directory structure**: Create the four-category artifact structure:
+4. **Directory structure**: Create the five-category artifact structure (when managing multiple papers, place under `docs/<paper-id>/`):
 
 ```text
 docs/
+├── manuscript/  # Final paper outputs & rendered formats (.md, .html, .pdf)
 ├── chapters/    # Manuscript body (one Markdown file per chapter)
 ├── design/      # Internal design docs (concept inventory, objection lists, audit reports)
 ├── literature/  # Literature artifacts (matrix, gap report, paper notes)
@@ -69,11 +70,15 @@ Each phase hands off to a dedicated skill. Following this order avoids the singl
 | Oversized scope | Stuffing multiple major claims into one paper | Limit the research question to one sentence in Phase 0; revisit the plan if you drift |
 | Ambiguous concepts | Using the same term with different meanings across contexts | Build the concept inventory in Phase 1 before drafting |
 | Perfectionist paralysis | Polishing the Introduction forever | Write each chapter as a rough draft that clears the objection list, then verify in Phase 5 |
+| Task initiation paralysis | Freezing because you don't know where to start | The agent auto-decomposes Phase 0 into micro-steps and presents them ([Cognitive Scaffolding Rule S1](../../../rules/en/cognitive-scaffolding-rule.md)) |
 
 ## Working Across Sessions
 
 For long-running projects, invoke [`session-research-handoff`](../session-research-handoff/SKILL.md) at the end of every session from day one, recording context in `docs/session-handoff.md`.
 
+## Cognitive Scaffolding
+All interactions in this skill must follow the [Cognitive Scaffolding Rule](../../../rules/en/cognitive-scaffolding-rule.md) (S1–S4). Phase 0 has the highest task initiation barrier, so S1 (Task Initiation Scaffolding) takes priority.
+
 ## Outputs
 - `docs/design/research-plan.md` (Research plan: question, target venue, definition of done)
-- Initialized four-category directory structure
+- Initialized five-category directory structure

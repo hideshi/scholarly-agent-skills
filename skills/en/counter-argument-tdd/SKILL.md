@@ -20,7 +20,16 @@ Apply Test-Driven Development (TDD: Red -> Green -> Refactor) discipline to pape
 ```
 
 ### Phase 1: List Objections
-Before drafting a paragraph or section, document potential objections in `docs/design/test-cases.md`:
+Before drafting a paragraph or section, document potential objections in `docs/design/test-cases.md`.
+
+Use the following **progressive dialogue pattern** ([Cognitive Scaffolding Rule S4](../../../rules/en/cognitive-scaffolding-rule.md)):
+
+1. The agent presents one objection candidate first and asks: "Could this type of objection apply?"
+2. After the user responds, present the next objection axis one at a time.
+3. Walk through structured checks (Heterogeneity Check, Data Re-Interpretation Check) one by one.
+4. Ask the open-ended "Any other objections you can think of?" **only at the end**.
+
+Format:
 
 ```markdown
 ## Section 3.2: Economic Transition in 17th Century

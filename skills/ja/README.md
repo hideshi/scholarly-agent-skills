@@ -23,6 +23,7 @@
 | [`session-research-handoff`](session-research-handoff/SKILL.md) | Session Handoff | セッション間や長期執筆における文脈・未解決課題・確認待ち文献の引き継ぎ |
 | [`pre-reading-briefing`](pre-reading-briefing/SKILL.md) | Reading Scaffold / Walkthrough | 草稿の通読前に節ごとの前提・主張・想定反論を提示し、校閲期の読解コストを下げる |
 | [`submission-venue-advisor`](submission-venue-advisor/SKILL.md) | Deployment / Release | 分野・言語・目的に応じた最適な提出先（プレプリントサーバー等）の選定と投稿手順を案内する |
+| [`design-science-research`](design-science-research/SKILL.md) | DSR / Process Evidence | DSR 論文の構造化・存在例/因果実証の区別・プロセスエビデンス管理を支援する |
 
 ---
 

@@ -23,6 +23,7 @@ Tool-agnostic AI Agent Skills and Rules applying software engineering discipline
 | [`session-research-handoff`](session-research-handoff/SKILL.md) | Session Handoff | Maintain research context, pending literature checks, and unproven claims across long sessions |
 | [`pre-reading-briefing`](pre-reading-briefing/SKILL.md) | Reading Scaffold / Walkthrough | Present per-section prerequisites, claims, and anticipated objections before read-through, lowering review-phase comprehension cost |
 | [`submission-venue-advisor`](submission-venue-advisor/SKILL.md) | Deployment / Release | Recommend the optimal submission venue (preprint server / repository) by field, language, and publication goal |
+| [`design-science-research`](design-science-research/SKILL.md) | DSR / Process Evidence | Support DSR paper structuring, existence proof vs causal claim distinction, and process evidence management |
 
 ---
 

@@ -22,8 +22,10 @@
 | [`citation-traceability-audit`](citation-traceability-audit/SKILL.md) | Traceability / Static Analysis | 本文中の全主張・記述が出典（脚注・参考文献）と1対1で対応しているか監査する |
 | [`session-research-handoff`](session-research-handoff/SKILL.md) | Session Handoff | セッション間や長期執筆における文脈・未解決課題・確認待ち文献の引き継ぎ |
 | [`pre-reading-briefing`](pre-reading-briefing/SKILL.md) | Reading Scaffold / Walkthrough | 草稿の通読前に節ごとの前提・主張・想定反論を提示し、校閲期の読解コストを下げる |
+| [`pre-submission-triage`](pre-submission-triage/SKILL.md) | Triage / Release Gate | 投稿前ゲートの WARN/FAIL を既知パターンに照合し「要修正/要確認/対応不要」に分類・記録する |
 | [`submission-venue-advisor`](submission-venue-advisor/SKILL.md) | Deployment / Release | 分野・言語・目的に応じた最適な提出先（プレプリントサーバー等）の選定と投稿手順を案内する |
 | [`design-science-research`](design-science-research/SKILL.md) | DSR / Process Evidence | DSR 論文の構造化・存在例/因果実証の区別・プロセスエビデンス管理を支援する |
+| [`friction-driven-skill-improvement`](friction-driven-skill-improvement/SKILL.md) | Telemetry / Retrospective | 執筆セッション中の摩擦信号を1行ログに捕捉し、セッション終了時にスキル改善提案として起票する |
 
 ---
 
@@ -45,7 +47,8 @@ graph TD
     E --> G[counter-argument-tdd]
     G --> H[claim-evidence-gate]
     H --> I[citation-traceability-audit]
-    I --> L[submission-venue-advisor]
+    I --> PT[pre-submission-triage]
+    PT --> L[submission-venue-advisor]
 
     F[scholarly-concept-modeling] -.->|任意の段階で適用| G
     F -.->|任意の段階で適用| H
@@ -53,12 +56,15 @@ graph TD
     J -.->|セッション終了時| I
     PR[pre-reading-briefing] -.->|通読・校閲前| H
     PR -.->|通読・校閲前| I
+    FD[friction-driven-skill-improvement] -.->|セッション中・終了時| J
 
     style K fill:#c8e6c9,stroke:#2e7d32
     style RP fill:#ffe0b2,stroke:#ef6c00
     style F fill:#e1bee7,stroke:#6a1b9a
     style J fill:#fff9c4,stroke:#f9a825
     style PR fill:#fff9c4,stroke:#f9a825
+    style FD fill:#fff9c4,stroke:#f9a825
+    style PT fill:#ffcdd2,stroke:#c62828
     style L fill:#bbdefb,stroke:#1565c0
 ```
 
@@ -68,5 +74,7 @@ graph TD
 - 🟣 `scholarly-concept-modeling` — 概念定義の横断スキル（論文構成や新概念導入時に随時発動）
 - 🟡 `session-research-handoff` — セッション引継ぎの横断スキル（作業終了時・コンテキスト制限接近時に発動）
 - 🟡 `pre-reading-briefing` — 校閲期の読解支援スキル（草稿通読・査読共有の前に発動）
+- 🟡 `friction-driven-skill-improvement` — 摩擦観察・改善起票の横断スキル（セッション中の摩擦検出時・終了時に発動）
+- 🔴 `pre-submission-triage` — 投稿前ゲートの判断スキル（原稿ビルド・投稿前のゲート実行時に発動）
 - 🔵 `submission-venue-advisor` — 提出・公開の終端スキル（全検証通過後に発動）
 

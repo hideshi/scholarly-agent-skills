@@ -68,6 +68,20 @@ h3 {
     font-weight: bold;
 }
 
+/* Keep headings attached to the following content (no orphan headings at page bottom) */
+h1, h2, h3, h4 {
+    page-break-after: avoid;
+    break-after: avoid;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+/* Avoid breaking inside a table row or a single list item */
+tr, li {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
 blockquote {
     margin: 12pt 0;
     padding: 8pt 16pt;

@@ -10,6 +10,7 @@ Checks:
   2. check_fact_grounding.py   — quantitative candidate paragraphs must have anchors
   3. check_citation_format.py  — citations must be registered in literature-matrix.md
   4. check_literature_grounding.py — citations must have literature/papers/*.md artifacts
+  5. check_reviewer_readability.py — prose must not carry internal symbols (FAIL = block)
 
 Exit codes:
   0 = all checks pass (WARN allowed unless --strict-warn)
@@ -105,6 +106,14 @@ def main(argv: Optional[List[str]] = None) -> int:
                 str(papers_dir),
                 "--matrix",
                 str(matrix),
+            ],
+        ),
+        (
+            "reviewer-readability",
+            [
+                sys.executable,
+                str(SCRIPTS_DIR / "check_reviewer_readability.py"),
+                str(chapters),
             ],
         ),
     ]

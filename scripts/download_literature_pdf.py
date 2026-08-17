@@ -70,7 +70,7 @@ def infer_referer(pdf_url: str) -> Optional[str]:
 
     springer_match = re.search(r"/content/pdf/(10\.\d+/[^/?#]+)", path, re.I)
     if "springer.com" in host and springer_match:
-        doi = springer_match.group(1)
+        doi = springer_match.group(1).removesuffix(".pdf")
         return f"https://link.springer.com/article/{doi}"
 
     wiley_match = re.search(r"/doi/pdfdirect/(10\.\d+/[^/?#]+)", path, re.I)

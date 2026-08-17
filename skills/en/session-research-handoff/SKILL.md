@@ -1,7 +1,7 @@
 ---
 name: session-research-handoff
-version: 2.5.0
-description: Use when ending a session or resuming long-term writing to summarize and restore research context, open questions, active thought state, and pending tasks. Supports multi-paper repositories with context-aware routing.
+version: 2.6.0
+description: Use when ending a session or resuming long-term writing to summarize and restore research context, open questions, active thought state, and pending tasks. Supports multi-paper repositories with context-aware routing. v2.6.0 adds the artifact index (INDEX.md) update responsibility.
 ---
 
 # Research Session Handoff Skill
@@ -163,3 +163,6 @@ All interactions in this skill must follow the [Cognitive Scaffolding Rule](../.
 ## Outputs
 - `docs/session-handoff.md` (Root cross-paper summary)
 - `docs/<paper-id>/session-handoff.md` (Paper-specific detailed handoff)
+
+### Updating the Artifact Index (INDEX.md)
+When new artifacts are created under `docs/<paper-id>/design/` during a session, update `design/INDEX.md` alongside the handoff. See the [Artifact Index & Naming Rule](../../../rules/en/artifact-index-rule.md) for categories, naming patterns, and status headers. The goal is to make "location and structure" mechanically decidable without relying on human memory; rule compliance is the agent's responsibility.

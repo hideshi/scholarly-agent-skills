@@ -1,7 +1,7 @@
 ---
 name: session-research-handoff
-version: 2.5.0
-description: 作業セッションの終了時・長期執筆の再開時に、研究文脈・未解決課題・確認待ち文献・思考途中状態を引き継ぎロードするスキル。複数論文リポジトリにおける論文固有/横断の文脈書き分けに対応。
+version: 2.6.0
+description: 作業セッションの終了時・長期執筆の再開時に、研究文脈・未解決課題・確認待ち文献・思考途中状態を引き継ぎロードするスキル。複数論文リポジトリにおける論文固有/横断の文脈書き分けに対応。v2.6.0 で成果物索引（INDEX.md）更新責務を追加。
 ---
 
 # 長期研究・セッション引継ぎスキル (Session Research Handoff)
@@ -163,3 +163,6 @@ Model: Cursor / Composer / 2.5
 ## 成果物
 - `docs/session-handoff.md`（ルート横断サマリ）
 - `docs/<paper-id>/session-handoff.md`（論文固有の詳細ハンドオフ）
+
+### 成果物索引（INDEX.md）の更新（v2.6.0 追加）
+セッション中に `docs/<paper-id>/design/` 配下へ新規成果物を作成した場合、ハンドオフ生成と併せて `design/INDEX.md` を更新する。区分・命名規則・状態ヘッダーの正本は [成果物索引・命名規則ルール](../../../rules/ja/artifact-index-rule.md) を参照。人間の記憶に依存せず「所在と構造」を機械的に判別可能にすることが目的であり、規則の遵守はエージェントが担う。

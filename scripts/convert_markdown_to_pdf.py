@@ -13,11 +13,13 @@ import sys
 import os
 import re
 import html
+import base64
 import argparse
 import subprocess
 import shutil
+import tempfile
 from pathlib import Path
-from typing import Tuple
+from typing import List, Optional, Tuple
 
 # Academic Paper Styling for HTML & PDF output
 ACADEMIC_CSS = """
@@ -100,6 +102,14 @@ code {
     font-size: 9.5pt;
 }
 
+img.mermaid-figure {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 16pt auto;
+    border: 1px solid #ddd;
+}
+
 pre {
     background-color: #f4f4f4;
     padding: 10px;
@@ -135,9 +145,76 @@ def ensure_blank_line_before_lists(md_text: str) -> str:
     return "\n".join(out) + ("\n" if md_text.endswith("\n") else "")
 
 
+_MERMAID_FENCE = re.compile(r"```mermaid\s*\n(.*?)```", re.DOTALL)
+
+
+def _mermaid_cli_command() -> Optional[List[str]]:
+    """Return argv prefix for mermaid-cli, or None if unavailable."""
+    if shutil.which("mmdc"):
+        return ["mmdc"]
+    if shutil.which("npx"):
+        return ["npx", "--yes", "@mermaid-js/mermaid-cli"]
+    return None
+
+
+def render_mermaid_fence_to_data_uri(source: str) -> Optional[str]:
+    """Render one Mermaid source block to a PNG data URI via mermaid-cli."""
+    cli = _mermaid_cli_command()
+    if not cli:
+        return None
+    with tempfile.TemporaryDirectory(prefix="mermaid-") as tmp:
+        tmp_path = Path(tmp)
+        mmd_path = tmp_path / "diagram.mmd"
+        png_path = tmp_path / "diagram.png"
+        mmd_path.write_text(source.strip() + "\n", encoding="utf-8")
+        cmd = cli + ["-i", str(mmd_path), "-o", str(png_path), "-b", "white"]
+        res = subprocess.run(cmd, capture_output=True, text=True)
+        if res.returncode != 0 or not png_path.is_file():
+            print(
+                f"WARN: mermaid-cli failed (rc={res.returncode}): {res.stderr.strip()}",
+                file=sys.stderr,
+            )
+            return None
+        b64 = base64.b64encode(png_path.read_bytes()).decode("ascii")
+        return f"data:image/png;base64,{b64}"
+
+
+def replace_mermaid_blocks_with_images(md_text: str) -> str:
+    """
+    Replace ```mermaid fenced blocks with HTML <img> (data URI).
+
+    Keeps Mermaid as the Markdown source of truth; rasterization is a
+    conversion-time concern for PDF/HTML deliverables.
+    """
+    rendered = 0
+
+    def _sub(match: re.Match) -> str:
+        nonlocal rendered
+        data_uri = render_mermaid_fence_to_data_uri(match.group(1))
+        if not data_uri:
+            return match.group(0)
+        rendered += 1
+        return (
+            f'\n\n<img class="mermaid-figure" alt="Figure (Mermaid)" '
+            f'src="{data_uri}" />\n\n'
+        )
+
+    out = _MERMAID_FENCE.sub(_sub, md_text)
+    if rendered:
+        print(f"INFO: Rendered {rendered} Mermaid diagram(s) to PNG for PDF/HTML.")
+    elif _MERMAID_FENCE.search(md_text) and _mermaid_cli_command() is None:
+        print(
+            "WARN: Mermaid blocks found but mermaid-cli/npx unavailable; "
+            "diagrams will appear as code.",
+            file=sys.stderr,
+        )
+    return out
+
+
 def render_markdown_body(md_text: str) -> str:
     """Render markdown text to clean HTML body content."""
     md_text = ensure_blank_line_before_lists(md_text)
+    md_text = replace_mermaid_blocks_with_images(md_text)
     try:
         import markdown
         return markdown.markdown(md_text, extensions=['extra', 'codehilite', 'tables', 'fenced_code', 'toc', 'attr_list'])

@@ -40,6 +40,25 @@ class TestConvertMarkdownToPdf(unittest.TestCase):
         self.assertNotIn("：\n- ", rendered)
         self.assertNotRegex(rendered, r"<p>[^<]*：\s*-")
 
+    def test_replace_mermaid_blocks_with_images(self):
+        from convert_markdown_to_pdf import replace_mermaid_blocks_with_images
+
+        md_sample = (
+            "図を示す。\n\n"
+            "```mermaid\n"
+            "flowchart TD\n"
+            "  A --> B\n"
+            "```\n\n"
+            "以上。\n"
+        )
+        out = replace_mermaid_blocks_with_images(md_sample)
+        if "data:image/png;base64," in out:
+            self.assertIn('class="mermaid-figure"', out)
+            self.assertNotIn("```mermaid", out)
+        else:
+            # mermaid-cli unavailable in CI: leave fence intact
+            self.assertIn("```mermaid", out)
+
     def test_convert_md_to_pdf_creates_output(self):
         sample_md = (
             "# Academic Paper Title\n\n"

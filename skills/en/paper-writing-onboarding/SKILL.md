@@ -1,7 +1,7 @@
 ---
 name: paper-writing-onboarding
-version: 1.0.0
-description: Use when writing an academic paper for the first time or starting a new research project, to get guided through repository structure, initial setup, and the phase-based writing workflow
+version: 1.1.0
+description: Use when writing an academic paper for the first time or starting a new research project, to get guided through repository structure, initial setup, the phase-based writing workflow, and core scholarly conventions such as citation practice and research ethics
 ---
 
 # Paper Writing Onboarding Skill
@@ -71,6 +71,18 @@ Each phase hands off to a dedicated skill. Following this order avoids the singl
 | Ambiguous concepts | Using the same term with different meanings across contexts | Build the concept inventory in Phase 1 before drafting |
 | Perfectionist paralysis | Polishing the Introduction forever | Write each chapter as a rough draft that clears the objection list, then verify in Phase 5 |
 | Task initiation paralysis | Freezing because you don't know where to start | The agent auto-decomposes Phase 0 into micro-steps and presents them ([Cognitive Scaffolding Rule S1](../../../rules/en/cognitive-scaffolding-rule.md)) |
+
+## Core Scholarly Conventions (For Beginners)
+
+This skill set mechanizes the workflow (how to write), but the conventions of the academic community (what is permitted and what is expected) are often assumed as tacit knowledge. First-time writers should survey the following areas before drafting. Note that these conventions **vary by field and venue** — the table below is a general map, and final decisions must always be grounded in a primary check of the venue's current regulations (submission guidelines, author instructions).
+
+| Area | What beginners should know |
+|---|---|
+| Citation practice | Distinguish direct quotation (verbatim, page number required) from paraphrase citation. When citing a work you could not read directly via a secondary source, the "as cited in" convention applies. This repository's `manual-stub` (page-anchored verified excerpt notes) is an internal management term and must never appear in the manuscript |
+| Source reliability hierarchy | The relative weight of peer-reviewed articles, scholarly books, preprints, grey literature (institutional reports), and web articles. Restrict citations to Tier 1/2 via [`source-criticism-gate`](../source-criticism-gate/SKILL.md) |
+| Research ethics | Prohibition of duplicate submission and salami slicing. Definitions of fabrication, falsification, and plagiarism (FFP). Authorship criteria (e.g., ICMJE). AI-tool disclosure policies differ per venue — always check current regulations |
+| Peer review culture | Rebuttals to reviewer comments should be evidence-based and courteous. Rejection is a normal part of research; use the comments to strengthen the next submission |
+| Data & reproducibility | Retention and disclosure obligations for primary data; privacy (PII) handling follows [`primary-data-integration`](../primary-data-integration/SKILL.md) |
 
 ## Working Across Sessions
 

@@ -5,9 +5,12 @@ Assemble manuscript draft from chapters/, references.md, and appendix-*.md.
 Usage:
   python3 assemble_manuscript.py <paper-id> [--repo-root PATH]
 
-Output:
-  docs/<paper-id>/manuscript/<paper-id>-draft.md
-  (cognitive-scaffolding: cognitive-scaffolding-draft.md)
+Output (default):
+  docs/<paper-id>/manuscript/<論文正式タイトル（和文仮題）>.md
+
+Naming follows rules/ja/academic-writing.md Official Paper Title Filename Rule
+and AGENTS.md `[paper_title].md` convention. paper-id is used only as the
+docs/ directory key, not as the deliverable basename.
 """
 
 from __future__ import annotations
@@ -33,9 +36,8 @@ APPENDIX_FILES = [
     "appendix-c-audit-index.md",
 ]
 
-DRAFT_NAMES = {
-    "cognitive-scaffolding": "cognitive-scaffolding-draft.md",
-}
+# Characters illegal or awkward in cross-platform filenames
+_UNSAFE_FILENAME_CHARS = re.compile(r'[\\/:*?"<>|\x00-\x1f]')
 
 
 def extract_abstract(outline_text: str) -> str:
@@ -49,7 +51,8 @@ def extract_abstract(outline_text: str) -> str:
     return match.group(1).strip()
 
 
-def extract_titles(outline_text: str) -> tuple[str, str]:
+def extract_titles(outline_text: str) -> tuple[str, str, str]:
+    """Return (ja_short_for_h1, ja_full_for_filename, en_title)."""
     ja_match = re.search(r"\*\*論文仮題（和文）\*\*:\s*(.+)", outline_text)
     en_match = re.search(r"\*\*論文仮題（英文）\*\*:\s*(.+)", outline_text)
     if not ja_match or not en_match:
@@ -57,7 +60,31 @@ def extract_titles(outline_text: str) -> tuple[str, str]:
     ja_full = ja_match.group(1).strip()
     # Short title for H1: part before full-width colon subtitle
     ja_short = ja_full.split("：")[0].strip()
-    return ja_short, en_match.group(1).strip()
+    return ja_short, ja_full, en_match.group(1).strip()
+
+
+def title_to_filename(title: str, suffix: str = ".md") -> str:
+    """Map official paper title to a filesystem-safe deliverable basename."""
+    name = title.strip()
+    # Prefer full-width analogues for path separators / colon
+    name = (
+        name.replace("\\", "＼")
+        .replace("/", "／")
+        .replace(":", "：")
+        .replace("*", "＊")
+        .replace("?", "？")
+        .replace('"', "＂")
+        .replace("<", "＜")
+        .replace(">", "＞")
+        .replace("|", "｜")
+    )
+    name = _UNSAFE_FILENAME_CHARS.sub("", name)
+    name = name.strip(" .")
+    if not name:
+        raise ValueError("Empty title after filename sanitization")
+    if not suffix.startswith("."):
+        suffix = f".{suffix}"
+    return f"{name}{suffix}"
 
 
 def strip_chapter_references(text: str) -> str:
@@ -68,13 +95,14 @@ def strip_chapter_references(text: str) -> str:
     return text.rstrip() + "\n"
 
 
-def assemble(paper_id: str, repo_root: Path) -> str:
+def assemble(paper_id: str, repo_root: Path) -> tuple[str, str]:
+    """Assemble manuscript text and return (content, ja_full_title)."""
     base = repo_root / "docs" / paper_id
     outline_path = base / "design" / "sot" / "paper-outline.md"
     if not outline_path.is_file():
         outline_path = base / "design" / "paper-outline.md"
     outline = outline_path.read_text(encoding="utf-8")
-    ja_title, en_title = extract_titles(outline)
+    ja_title, ja_full, en_title = extract_titles(outline)
     abstract = extract_abstract(outline)
 
     parts: list[str] = [
@@ -127,7 +155,7 @@ def assemble(paper_id: str, repo_root: Path) -> str:
         parts.append("---")
         parts.append("")
 
-    return "\n".join(parts).rstrip() + "\n"
+    return "\n".join(parts).rstrip() + "\n", ja_full
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -148,12 +176,12 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     repo_root = args.repo_root.resolve()
-    content = assemble(args.paper_id, repo_root)
+    content, ja_full = assemble(args.paper_id, repo_root)
 
     if args.output:
         out_path = args.output.resolve()
     else:
-        draft_name = DRAFT_NAMES.get(args.paper_id, f"{args.paper_id}-draft.md")
+        draft_name = title_to_filename(ja_full, ".md")
         out_path = repo_root / "docs" / args.paper_id / "manuscript" / draft_name
 
     out_path.parent.mkdir(parents=True, exist_ok=True)

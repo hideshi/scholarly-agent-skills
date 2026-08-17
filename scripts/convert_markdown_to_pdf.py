@@ -118,8 +118,26 @@ pre {
 """
 
 
+def ensure_blank_line_before_lists(md_text: str) -> str:
+    """Python-Markdown treats 'paragraph\\n- item' as one <p>; insert a blank line."""
+    list_item = re.compile(r"^(\s*[-*+]|\s*\d+\.)\s+")
+    lines = md_text.splitlines()
+    out: list[str] = []
+    for i, line in enumerate(lines):
+        if i > 0 and list_item.match(line):
+            prev = lines[i - 1]
+            if prev.strip() and not list_item.match(prev):
+                prev_l = prev.lstrip()
+                if not prev_l.startswith(("#", "|", ">", "```")):
+                    if not out or out[-1].strip() != "":
+                        out.append("")
+        out.append(line)
+    return "\n".join(out) + ("\n" if md_text.endswith("\n") else "")
+
+
 def render_markdown_body(md_text: str) -> str:
     """Render markdown text to clean HTML body content."""
+    md_text = ensure_blank_line_before_lists(md_text)
     try:
         import markdown
         return markdown.markdown(md_text, extensions=['extra', 'codehilite', 'tables', 'fenced_code', 'toc', 'attr_list'])

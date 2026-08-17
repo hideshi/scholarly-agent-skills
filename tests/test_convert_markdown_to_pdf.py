@@ -28,6 +28,18 @@ class TestConvertMarkdownToPdf(unittest.TestCase):
         self.assertTrue("<h1" in rendered or "<pre>" in rendered)
         self.assertNotIn("# Heading 1", rendered if "<h1" in rendered else "")
 
+    def test_render_keeps_list_after_fullwidth_colon(self):
+        md_sample = (
+            "具体的には、以下を担う：\n"
+            "- **自由度の縮小**: foo\n"
+            "- **方向維持**: bar\n"
+        )
+        rendered = render_markdown_body(md_sample)
+        self.assertIn("<ul>", rendered)
+        self.assertIn("<li>", rendered)
+        self.assertNotIn("：\n- ", rendered)
+        self.assertNotRegex(rendered, r"<p>[^<]*：\s*-")
+
     def test_convert_md_to_pdf_creates_output(self):
         sample_md = (
             "# Academic Paper Title\n\n"

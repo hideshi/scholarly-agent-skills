@@ -13,6 +13,9 @@ Checks:
   5. check_reviewer_readability.py — prose must not carry internal symbols (FAIL = block)
   6. check_terminology_consistency.py — registered variants must not reappear;
      glossary English terms need Japanese glosses (variant = FAIL, gloss = WARN)
+  7. check_sensitive_expression.py — sensitive expressions (absolute terms,
+     deficit-model vocabulary, misidentification coupling, abstract register);
+     banned regressions = FAIL, others = WARN
 
 Exit codes:
   0 = all checks pass (WARN allowed unless --strict-warn)
@@ -123,6 +126,14 @@ def main(argv: Optional[List[str]] = None) -> int:
             [
                 sys.executable,
                 str(SCRIPTS_DIR / "check_terminology_consistency.py"),
+                str(chapters),
+            ],
+        ),
+        (
+            "sensitive-expression",
+            [
+                sys.executable,
+                str(SCRIPTS_DIR / "check_sensitive_expression.py"),
                 str(chapters),
             ],
         ),

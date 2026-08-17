@@ -182,6 +182,7 @@ def run_prose_gates(paper_id: str, repo_root: Path) -> int:
     chapters = repo_root / "docs" / paper_id / "chapters"
     rc = run_gate_script("check_reviewer_readability.py", chapters)
     rc |= run_gate_script("check_terminology_consistency.py", chapters)
+    rc |= run_gate_script("check_sensitive_expression.py", chapters)
     return rc
 
 

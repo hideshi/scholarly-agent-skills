@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `scholarly-concept-modeling` (v1.1.0): new "Contrast with Prior Empirical Claims" field to record proposition-level (not only definitional) disputes.
   - `source-criticism-gate` (v1.1.0): scope note clarifying that Tier judgments cover source types only; within-Tier-1 disputes are delegated to the skills above.
 
+### Changed
+- **`pre-reading-briefing` (v1.1.0)** (ja/en): Confirmation questions are typed (`TERM` / `VALID` / `MAP`). The author answers TERM one at a time (cap 3 per session). The agent drafts VALID/MAP with join evidence; the author adopt/rejects 2–3 rows per turn (no accept-all). Ambiguous tags default to TERM. Step 5 no longer asks for every answer.
+
 ---
 
 ## [1.5.0] - 2026-08-16

@@ -60,5 +60,5 @@ Artifacts in paper repositories are recommended to be organized into the followi
 - `docs/literature/`: Literature matrix, gap reports, glossary, paper reading notes (`literature-matrix.md`, `literature-gap-report.md`, `bilingual-glossary.md`, `papers/*.md`)
 - `docs/data/`: Empirical datasets and aggregated statistics (`philippines-poverty-data.md`)
 
-- **Commit Recommended**: Output files in `docs/` (including reports, inventories, chapter drafts, and rendered manuscripts) should be **committed to Git** for traceability and collaboration.
-- **Commit Forbidden (Must Ignore)**: Raw dataset files (`raw_data/`) and PII mapping files (`mapping.json`) MUST be ignored via `.gitignore` and `python3 scripts/setup_ai_ignore.py` to prevent privacy/security leaks.protection.
+- **Version control is recommended; agent auto-commit is forbidden**: Keep `docs/` reports, inventories, chapter drafts, and manuscripts in Git for traceability. Agents MUST NOT run `git add` / `git commit` after edits. Show changed files and the diff, and commit only when the user explicitly says to commit. Do not treat task completion or a passing quality gate as approval.
+- **Commit Forbidden (Must Ignore)**: Raw dataset files (`raw_data/`) and PII mapping files (`mapping.json`) MUST be ignored via `.gitignore` and `python3 scripts/setup_ai_ignore.py` to prevent privacy/security leaks.

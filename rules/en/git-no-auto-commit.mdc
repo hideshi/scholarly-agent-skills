@@ -1,0 +1,11 @@
+---
+description: Agents must not run git add / git commit. After edits, show the diff only.
+alwaysApply: true
+---
+
+# No Agent Auto-Commit
+
+- Do not run `git add` or `git commit`.
+- After edits, list changed files and summarize the diff; wait for the user.
+- Commit only when the user explicitly says to commit.
+- Do not treat task completion, a passing quality gate, or `docs/` generation as approval.

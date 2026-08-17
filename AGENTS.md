@@ -60,6 +60,6 @@ python3 /path/to/scholarly-agent-skills/scripts/link_shared_skills.py /path/to/t
 - `docs/literature/`: 文献調査・用語集・論文ノート (`literature-matrix.md`, `literature-gap-report.md`, `bilingual-glossary.md`, `papers/*.md`)
 - `docs/data/`: 取得データ・統計集計成果物 (`philippines-poverty-data.md` 等)
 
-- **コミット推奨**: スキルによって生成される上記 `docs/` 配下の報告書・インベントリ・本文草稿・完成原稿 (manuscript) は、論文のトレーサビリティ確保と共同研究者との文脈共有のため、**Git リポジトリへコミットしてバージョン管理することを推奨**します。
+- **バージョン管理は推奨、エージェントの自動コミットは禁止**: `docs/` 配下の報告書・インベントリ・本文草稿・完成原稿は、トレーサビリティのため Git で残す。ただしエージェントは修正後に `git add` / `git commit` を実行しない。変更ファイルと差分を提示し、ユーザーが「コミットして」と明示したときだけコミットする。作業完了や品質ゲート通過を承認と解釈しない。
 - **コミット厳禁（要除外）**: 生の調査データ（`raw_data/`）および PII マッピング用ファイル（`mapping.json` 等）は、プライバシー・セキュリティ保護のため `.gitignore` および `python3 scripts/setup_ai_ignore.py` による AI Ignore 対象に設定し、コミットしないでください。
 

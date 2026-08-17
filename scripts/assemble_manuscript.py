@@ -161,13 +161,12 @@ def assemble(paper_id: str, repo_root: Path) -> tuple[str, str]:
     return "\n".join(parts).rstrip() + "\n", ja_full
 
 
-def run_readability_gate(paper_id: str, repo_root: Path) -> int:
-    """Run check_reviewer_readability.py on chapters/. Returns its exit code."""
-    script = SCRIPTS_DIR / "check_reviewer_readability.py"
+def run_gate_script(script_name: str, chapters: Path) -> int:
+    """Run a gate script on chapters/. Returns its exit code (0 if missing)."""
+    script = SCRIPTS_DIR / script_name
     if not script.is_file():
-        print(f"⚠️ readability gate script not found: {script} (skipped)", file=sys.stderr)
+        print(f"⚠️ gate script not found: {script} (skipped)", file=sys.stderr)
         return 0
-    chapters = repo_root / "docs" / paper_id / "chapters"
     res = subprocess.run(
         [sys.executable, str(script), str(chapters)],
         capture_output=True,
@@ -176,6 +175,14 @@ def run_readability_gate(paper_id: str, repo_root: Path) -> int:
     out = ((res.stdout or "") + (("\n" + res.stderr) if res.stderr else "")).strip()
     print(out)
     return res.returncode
+
+
+def run_prose_gates(paper_id: str, repo_root: Path) -> int:
+    """Fail-stop gates on manuscript prose. Returns non-zero if any FAILs."""
+    chapters = repo_root / "docs" / paper_id / "chapters"
+    rc = run_gate_script("check_reviewer_readability.py", chapters)
+    rc |= run_gate_script("check_terminology_consistency.py", chapters)
+    return rc
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -196,18 +203,18 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--force",
         action="store_true",
-        help="Assemble even if the reviewer-readability gate reports FAIL",
+        help="Assemble even if the prose gates (readability/terminology) report FAIL",
     )
     args = parser.parse_args(argv)
 
     repo_root = args.repo_root.resolve()
     content, ja_full = assemble(args.paper_id, repo_root)
 
-    gate_rc = run_readability_gate(args.paper_id, repo_root)
+    gate_rc = run_prose_gates(args.paper_id, repo_root)
     if gate_rc != 0 and not args.force:
         print(
-            "💥 Assembly aborted: reviewer-readability gate reported FAIL. "
-            "Fix prose findings or re-run with --force.",
+            "💥 Assembly aborted: prose gate reported FAIL. "
+            "Fix findings or re-run with --force.",
             file=sys.stderr,
         )
         return 1

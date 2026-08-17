@@ -24,6 +24,7 @@
 | [`pre-reading-briefing`](pre-reading-briefing/SKILL.md) | Reading Scaffold / Walkthrough | 草稿の通読前に節ごとの前提・主張・想定反論を提示し、校閲期の読解コストを下げる |
 | [`pre-submission-triage`](pre-submission-triage/SKILL.md) | Triage / Release Gate | 投稿前ゲートの WARN/FAIL を既知パターンに照合し「要修正/要確認/対応不要」に分類・記録する |
 | [`reviewer-readability-check`](reviewer-readability-check/SKILL.md) | Readability Gate / Lint | 本文から内部記号・時刻・バージョン露出を検出し、査読者が読める語彙レベルかを分類・記録する |
+| [`terminology-consistency`](terminology-consistency/SKILL.md) | Terminology Lint / Ubiquitous Language | 用語の表記揺れと未 gloss 英語を機械検査し、意味的な揺れを LLM レビューで発見して variants.yml に蓄積する |
 | [`submission-venue-advisor`](submission-venue-advisor/SKILL.md) | Deployment / Release | 分野・言語・目的に応じた最適な提出先（プレプリントサーバー等）の選定と投稿手順を案内する |
 | [`design-science-research`](design-science-research/SKILL.md) | DSR / Process Evidence | DSR 論文の構造化・存在例/因果実証の区別・プロセスエビデンス管理を支援する |
 | [`friction-driven-skill-improvement`](friction-driven-skill-improvement/SKILL.md) | Telemetry / Retrospective | 執筆セッション中の摩擦信号を1行ログに捕捉し、セッション終了時にスキル改善提案として起票する |
@@ -49,7 +50,8 @@ graph TD
     G --> H[claim-evidence-gate]
     H --> I[citation-traceability-audit]
     I --> RR[reviewer-readability-check]
-    RR --> PT[pre-submission-triage]
+    RR --> TC[terminology-consistency]
+    TC --> PT[pre-submission-triage]
     PT --> L[submission-venue-advisor]
 
     F[scholarly-concept-modeling] -.->|任意の段階で適用| G
@@ -79,5 +81,6 @@ graph TD
 - 🟡 `friction-driven-skill-improvement` — 摩擦観察・改善起票の横断スキル（セッション中の摩擦検出時・終了時に発動）
 - 🔴 `pre-submission-triage` — 投稿前ゲートの判断スキル（原稿ビルド・投稿前のゲート実行時に発動）
 - 🔴 `reviewer-readability-check` — 査読者可読性のゲートスキル（章完成時・原稿ビルド時に強制発動）
+- 🔴 `terminology-consistency` — 用語一貫性のゲートスキル（章完成時・原稿ビルド時に機械層が強制発動、意味的揺れは LLM レビューで発見・蓄積）
 - 🔵 `submission-venue-advisor` — 提出・公開の終端スキル（全検証通過後に発動）
 

@@ -24,6 +24,7 @@ Tool-agnostic AI Agent Skills and Rules applying software engineering discipline
 | [`pre-reading-briefing`](pre-reading-briefing/SKILL.md) | Reading Scaffold / Walkthrough | Present per-section prerequisites, claims, and anticipated objections before read-through, lowering review-phase comprehension cost |
 | [`pre-submission-triage`](pre-submission-triage/SKILL.md) | Triage / Release Gate | Classify pre-submission gate WARN/FAIL findings into must-fix / needs-review / acceptable with recorded rationale |
 | [`reviewer-readability-check`](reviewer-readability-check/SKILL.md) | Readability Gate / Lint | Detect internal codes, timestamps, and version leaks in prose, and classify whether the text is at reviewer-readable vocabulary level |
+| [`terminology-consistency`](terminology-consistency/SKILL.md) | Terminology Lint / Ubiquitous Language | Mechanically detect terminology drift and unglossed English, discover semantic drift via LLM review, and accumulate findings in variants.yml |
 | [`submission-venue-advisor`](submission-venue-advisor/SKILL.md) | Deployment / Release | Recommend the optimal submission venue (preprint server / repository) by field, language, and publication goal |
 | [`design-science-research`](design-science-research/SKILL.md) | DSR / Process Evidence | Support DSR paper structuring, existence proof vs causal claim distinction, and process evidence management |
 | [`friction-driven-skill-improvement`](friction-driven-skill-improvement/SKILL.md) | Telemetry / Retrospective | Capture friction signals during writing sessions as one-line logs and draft skill improvement proposals at session end |
@@ -49,7 +50,8 @@ graph TD
     G --> H[claim-evidence-gate]
     H --> I[citation-traceability-audit]
     I --> RR[reviewer-readability-check]
-    RR --> PT[pre-submission-triage]
+    RR --> TC[terminology-consistency]
+    TC --> PT[pre-submission-triage]
     PT --> L[submission-venue-advisor]
 
     F[scholarly-concept-modeling] -.->|any stage| G
@@ -79,5 +81,6 @@ graph TD
 - 🟡 `friction-driven-skill-improvement` — Cross-cutting friction observation and improvement proposal skill (invoked on friction detection and at session end)
 - 🔴 `pre-submission-triage` — Pre-submission gate judgment skill (invoked when the gate runs before manuscript build / submission)
 - 🔴 `reviewer-readability-check` — Reviewer-readability gate skill (mandatory on chapter completion and manuscript build)
+- 🔴 `terminology-consistency` — Terminology consistency gate skill (mechanical layer mandatory on chapter completion and build; semantic drift discovered via LLM review and accumulated)
 - 🔵 `submission-venue-advisor` — Terminal publication skill (invoked after all quality gates pass)
 

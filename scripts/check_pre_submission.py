@@ -11,6 +11,8 @@ Checks:
   3. check_citation_format.py  — citations must be registered in literature-matrix.md
   4. check_literature_grounding.py — citations must have literature/papers/*.md artifacts
   5. check_reviewer_readability.py — prose must not carry internal symbols (FAIL = block)
+  6. check_terminology_consistency.py — registered variants must not reappear;
+     glossary English terms need Japanese glosses (variant = FAIL, gloss = WARN)
 
 Exit codes:
   0 = all checks pass (WARN allowed unless --strict-warn)
@@ -113,6 +115,14 @@ def main(argv: Optional[List[str]] = None) -> int:
             [
                 sys.executable,
                 str(SCRIPTS_DIR / "check_reviewer_readability.py"),
+                str(chapters),
+            ],
+        ),
+        (
+            "terminology-consistency",
+            [
+                sys.executable,
+                str(SCRIPTS_DIR / "check_terminology_consistency.py"),
                 str(chapters),
             ],
         ),

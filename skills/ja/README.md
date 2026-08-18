@@ -30,6 +30,7 @@
 | [`submission-venue-advisor`](submission-venue-advisor/SKILL.md) | Deployment / Release | 分野・言語・目的に応じた最適な提出先（プレプリントサーバー等）の選定と投稿手順を案内する |
 | [`design-science-research`](design-science-research/SKILL.md) | DSR / Process Evidence | DSR 論文の構造化・存在例/因果実証の区別・プロセスエビデンス管理を支援する |
 | [`friction-driven-skill-improvement`](friction-driven-skill-improvement/SKILL.md) | Telemetry / Retrospective | 執筆セッション中の摩擦信号を1行ログに捕捉し、セッション終了時にスキル改善提案として起票する |
+| [`prose-style-guide`](prose-style-guide/SKILL.md) | Style Guide / Writing Rules | 章の執筆開始前・執筆中に、査読者・一般読者が読みやすい学術文体を自律的に維持するための心得スキル |
 
 ---
 
@@ -58,6 +59,8 @@ graph TD
     TC --> SE[sensitive-expression-guard]
     SE --> PT[pre-submission-triage]
     PT --> L[submission-venue-advisor]
+    G --> PS[prose-style-guide]
+    PS -.->|執筆開始前・執筆中| G
 
     F[scholarly-concept-modeling] -.->|任意の段階で適用| G
     F -.->|任意の段階で適用| H
@@ -87,6 +90,7 @@ graph TD
 - 🟡 `session-research-handoff` — セッション引継ぎの横断スキル（作業終了時・コンテキスト制限接近時に発動）
 - 🟡 `pre-reading-briefing` — 校閲期の読解支援スキル（草稿通読・査読共有の前に発動）
 - 🟡 `friction-driven-skill-improvement` — 摩擦観察・改善起票の横断スキル（セッション中の摩擦検出時・終了時に発動）
+- 🟡 `prose-style-guide` — 文体心得の横断スキル（章の執筆開始前・執筆中に発動）
 - 🔴 `pre-submission-triage` — 投稿前ゲートの判断スキル（原稿ビルド・投稿前のゲート実行時に発動）
 - 🔴 `reviewer-readability-check` — 査読者可読性のゲートスキル（章完成時・原稿ビルド時に強制発動）
 - 🔴 `terminology-consistency` — 用語一貫性のゲートスキル（章完成時・原稿ビルド時に機械層が強制発動、意味的揺れは LLM レビューで発見・蓄積）

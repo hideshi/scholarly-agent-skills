@@ -30,6 +30,7 @@ Tool-agnostic AI Agent Skills and Rules applying software engineering discipline
 | [`submission-venue-advisor`](submission-venue-advisor/SKILL.md) | Deployment / Release | Recommend the optimal submission venue (preprint server / repository) by field, language, and publication goal |
 | [`design-science-research`](design-science-research/SKILL.md) | DSR / Process Evidence | Support DSR paper structuring, existence proof vs causal claim distinction, and process evidence management |
 | [`friction-driven-skill-improvement`](friction-driven-skill-improvement/SKILL.md) | Telemetry / Retrospective | Capture friction signals during writing sessions as one-line logs and draft skill improvement proposals at session end |
+| [`prose-style-guide`](prose-style-guide/SKILL.md) | Style Guide / Writing Rules | Before and during chapter writing, autonomously maintain a readable academic style for reviewers and general readers |
 
 ---
 
@@ -58,6 +59,8 @@ graph TD
     TC --> SE[sensitive-expression-guard]
     SE --> PT[pre-submission-triage]
     PT --> L[submission-venue-advisor]
+    G --> PS[prose-style-guide]
+    PS -.->|before and during writing| G
 
     F[scholarly-concept-modeling] -.->|any stage| G
     F -.->|any stage| H
@@ -87,6 +90,7 @@ graph TD
 - 🟡 `session-research-handoff` — Cross-cutting session continuity skill (invoked at session end or context limit approach)
 - 🟡 `pre-reading-briefing` — Review-phase reading support skill (invoked before draft read-through or sharing with reviewers)
 - 🟡 `friction-driven-skill-improvement` — Cross-cutting friction observation and improvement proposal skill (invoked on friction detection and at session end)
+- 🟡 `prose-style-guide` — Cross-cutting writing style skill (invoked before and during chapter writing)
 - 🔴 `pre-submission-triage` — Pre-submission gate judgment skill (invoked when the gate runs before manuscript build / submission)
 - 🔴 `reviewer-readability-check` — Reviewer-readability gate skill (mandatory on chapter completion and manuscript build)
 - 🔴 `terminology-consistency` — Terminology consistency gate skill (mechanical layer mandatory on chapter completion and build; semantic drift discovered via LLM review and accumulated)

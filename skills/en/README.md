@@ -18,6 +18,7 @@ Tool-agnostic AI Agent Skills and Rules applying software engineering discipline
 | [`pdf-paper-ingestion`](pdf-paper-ingestion/SKILL.md) | File Parser / Asset Extraction | Convert PDF papers to Markdown and extract embedded figures/images natively without external tools |
 | [`academic-paper-translation`](academic-paper-translation/SKILL.md) | Globalization / i18n | Translate foreign papers into user's native language with parallel text and bilingual glossaries |
 | [`literature-search`](literature-search/SKILL.md) | External API / Multi-Provider | Search papers across OpenAlex, arXiv, Crossref, and Semantic Scholar via JSON configuration |
+| [`diachronic-claim-typing`](diachronic-claim-typing/SKILL.md) | Type System / Stratigraphy | Type diachronic claims and audit period-section selection, transmission, continuity, and novelty over-claims |
 | [`source-criticism-gate`](source-criticism-gate/SKILL.md) | Input Validation / Sanity Gate | Audit source trustworthiness (Tier 1-3) and block unverified websites, blogs, or social media |
 | [`citation-traceability-audit`](citation-traceability-audit/SKILL.md) | Traceability / Static Analysis | Audit 1-to-1 matching between body text claims, footnotes, and bibliography references |
 | [`session-research-handoff`](session-research-handoff/SKILL.md) | Session Handoff | Maintain research context, pending literature checks, and unproven claims across long sessions |
@@ -41,6 +42,8 @@ graph TD
     K[paper-writing-onboarding] -.->|before writing begins| RP
     RP[research-plan-workshop] --> A
     RP --> F
+    RP -.->|if diachronic| DCT[diachronic-claim-typing]
+    DCT --> A
     A[literature-search] --> SC[source-criticism-gate]
     SC --> B[pdf-paper-ingestion]
     B --> C[academic-paper-translation]
@@ -58,6 +61,7 @@ graph TD
 
     F[scholarly-concept-modeling] -.->|any stage| G
     F -.->|any stage| H
+    DCT -.->|check T3–T5| H
     J[session-research-handoff] -.->|end of session| A
     J -.->|end of session| I
     PR[pre-reading-briefing] -.->|before read-through| H
@@ -67,6 +71,7 @@ graph TD
     style K fill:#c8e6c9,stroke:#2e7d32
     style RP fill:#ffe0b2,stroke:#ef6c00
     style F fill:#e1bee7,stroke:#6a1b9a
+    style DCT fill:#e1bee7,stroke:#6a1b9a
     style J fill:#fff9c4,stroke:#f9a825
     style PR fill:#fff9c4,stroke:#f9a825
     style FD fill:#fff9c4,stroke:#f9a825
@@ -78,6 +83,7 @@ graph TD
 - 🟢 `paper-writing-onboarding` — Entry-point skill (invoked at project start or by first-time writers)
 - 🟠 `research-plan-workshop` — Phase 0 interactive planning skill (invoked when the research question is unsettled)
 - 🟣 `scholarly-concept-modeling` — Cross-cutting concept definition skill (invoked when outlining or introducing new concepts)
+- 🟣 `diachronic-claim-typing` — Diachronic claim typing (invoked before literature search and before cross-period sentences in conceptual history / genealogy)
 - 🟡 `session-research-handoff` — Cross-cutting session continuity skill (invoked at session end or context limit approach)
 - 🟡 `pre-reading-briefing` — Review-phase reading support skill (invoked before draft read-through or sharing with reviewers)
 - 🟡 `friction-driven-skill-improvement` — Cross-cutting friction observation and improvement proposal skill (invoked on friction detection and at session end)

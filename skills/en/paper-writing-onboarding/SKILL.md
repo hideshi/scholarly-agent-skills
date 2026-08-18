@@ -1,6 +1,6 @@
 ---
 name: paper-writing-onboarding
-version: 1.1.0
+version: 1.1.1
 description: Use when writing an academic paper for the first time or starting a new research project, to get guided through repository structure, initial setup, the phase-based writing workflow, and core scholarly conventions such as citation practice and research ethics
 ---
 
@@ -46,6 +46,7 @@ Each phase hands off to a dedicated skill. Following this order avoids the singl
 → Invoke [`scholarly-concept-modeling`](../scholarly-concept-modeling/SKILL.md) to define and bound core concepts. Starting to write with polysemous terms guarantees a full rewrite later.
 
 ### Phase 2: Literature Research
+→ For diachronic papers, type claims first with [`diachronic-claim-typing`](../diachronic-claim-typing/SKILL.md).
 → Use [`literature-search`](../literature-search/SKILL.md) to collect sources, [`pdf-paper-ingestion`](../pdf-paper-ingestion/SKILL.md) to convert papers to Markdown, and [`academic-paper-translation`](../academic-paper-translation/SKILL.md) for foreign-language sources.
 → Filter citation candidates through [`source-criticism-gate`](../source-criticism-gate/SKILL.md) (Tier 1/2 only).
 

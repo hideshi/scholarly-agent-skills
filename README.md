@@ -19,6 +19,7 @@
 - **`claim-evidence-gate`**: 不変条件監査の手法を用い、論文の主張（Claim）に対する一次史料・実験データ・引用根拠（Evidence）の整合性をゲート判定。
 - **`literature-gap-analysis`**: 仕様ギャップ分析（Spec Gap Analysis）の手法を用い、先行研究の到達点（AS-IS）と自説の新規性（TO-BE）の乖離を自動抽出。
 - **`literature-search`**: OpenAlex, arXiv, Crossref, Semantic Scholar から多角的にオープンアクセス論文を自動取得・マトリクス化。
+- **`diachronic-claim-typing`**: 通時的論文で主張を型付けし、断面選定と伝播・連続・新規性の過大接続を監査する。
 - **`source-criticism-gate`**: 情報源の信頼度（Tier 1〜3）を評価し、不確かなWebサイトやSNSからの引用を遮断する。
 - **`pdf-paper-ingestion`**: PDF論文の解読、見出し構造抽出、および画像・図版の自動切り出し・Markdown埋め込み。
 - **`academic-paper-translation`**: 設定ファイルの自国語に基づき、外国語論文を対照翻訳・用語対照表（Glossary）付きで構造化変換。

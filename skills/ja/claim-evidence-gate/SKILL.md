@@ -1,6 +1,6 @@
 ---
 name: claim-evidence-gate
-version: 1.4.0
+version: 1.4.1
 description: 執筆完了時・提出前に、論文内の各主張 (Claim) と提示された一次史料・実験データ・引用根拠 (Evidence) の対応強度を判定する品質ゲート
 ---
 
@@ -13,6 +13,8 @@ description: 執筆完了時・提出前に、論文内の各主張 (Claim) と�
 - 執筆完了後の各章セルフレビュー時
 - 投稿・提出前の最終チェックフェーズ
 - 査読者・共同研究者から根拠に関する指摘を受けた際
+
+通時的主張（伝播・並置・連続・新規性）は [`diachronic-claim-typing`](../diachronic-claim-typing/SKILL.md) のインベントリと照合する。類似だけで伝播（T3）を PASS にしない。
 
 ## 評価手順
 

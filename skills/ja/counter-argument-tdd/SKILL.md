@@ -1,6 +1,6 @@
 ---
 name: counter-argument-tdd
-version: 1.4.0
+version: 1.4.1
 description: 節・パラグラフ執筆前や新たな主張構築時に、想定反論・反例を定義し、それを乗り越える論理構成で執筆するスキル
 ---
 
@@ -53,6 +53,8 @@ description: 節・パラグラフ執筆前や新たな主張構築時に、想�
 反論リストの作成時、`docs/<paper-id>/literature/literature-matrix.md`（単一論文リポジトリでは `docs/literature/literature-matrix.md`）の係争ステータス列を確認し、以下を実施する：
 - `contested` / `contradicted` の文献・命題に依拠した主張がある場合、**対立陣営の代表文献からの反論を最低1件**テストケースとして列挙する。
 - 係争ステータスが `unknown` のままの屋台骨主張がある場合、`literature-search` Step 1.5（対立陣営探索）への差し戻しを検討する。
+
+通時的論文では、チェリーピッキング（断面選定）、アナクロニズム（造語概念の過去への読み込み）、伝播証拠の欠如を、未列挙なら追加する（[`diachronic-claim-typing`](../diachronic-claim-typing/SKILL.md)）。
 
 *※本チェックは「想像の反論」を「実在の反論」で補強し、[claim-evidence-gate](../claim-evidence-gate/SKILL.md) の `Field Disagreement` 軸の事前検証として機能する。*
 

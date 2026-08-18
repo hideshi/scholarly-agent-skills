@@ -1,6 +1,6 @@
 ---
 name: literature-gap-analysis
-version: 1.0.0
+version: 1.0.1
 description: Use during literature review or introduction drafting to extract gaps between current literature (AS-IS) and proposed contribution (TO-BE)
 ---
 
@@ -31,7 +31,7 @@ Create a structured comparison matrix highlighting the specific gaps this paper 
 ```
 
 ### Step 3: Generate Contribution Statement
-Based on the extracted gaps, compose a positioning statement for the Introduction: "While prior work has focused on X using method Y, this paper employs Z to reveal W, thereby addressing the gap of..."
+Based on the extracted gaps, compose a positioning statement for the Introduction: "While prior work has focused on X using method Y, this paper employs Z to reveal W, thereby addressing the gap of..." If the novelty is a genealogical connection and T3 in [`diachronic-claim-typing`](../diachronic-claim-typing/SKILL.md) has not passed, downgrade it to juxtaposition/comparison.
 
 ## Outputs
 - `docs/literature/literature-gap-report.md` (Literature Gap Report)

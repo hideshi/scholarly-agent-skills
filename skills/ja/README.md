@@ -18,6 +18,7 @@
 | [`pdf-paper-ingestion`](pdf-paper-ingestion/SKILL.md) | File Parser / Asset Extraction | PDF論文をMarkdownへ変換し、埋め込まれた画像・図版を自動切出・保存して埋め込む |
 | [`academic-paper-translation`](academic-paper-translation/SKILL.md) | Globalization / i18n | 設定ファイルの自国語に基づき外国語論文を対照翻訳・用語対照表（Glossary）付きで構造化変換する |
 | [`literature-search`](literature-search/SKILL.md) | External API / Multi-Provider | 設定ファイルに基づき OpenAlex, arXiv, Crossref, Semantic Scholar 等から多角的に論文を検索・マトリクス反映する |
+| [`diachronic-claim-typing`](diachronic-claim-typing/SKILL.md) | Type System / Stratigraphy | 通時的論文で主張を型付けし、断面選定と伝播・連続・新規性の過大接続を監査する |
 | [`source-criticism-gate`](source-criticism-gate/SKILL.md) | Input Validation / Sanity Gate | 情報源の信頼度（Tier 1〜3）を評価し、不確かなWebサイトやSNSからの引用を遮断する |
 | [`citation-traceability-audit`](citation-traceability-audit/SKILL.md) | Traceability / Static Analysis | 本文中の全主張・記述が出典（脚注・参考文献）と1対1で対応しているか監査する |
 | [`session-research-handoff`](session-research-handoff/SKILL.md) | Session Handoff | セッション間や長期執筆における文脈・未解決課題・確認待ち文献の引き継ぎ |
@@ -41,6 +42,8 @@ graph TD
     K[paper-writing-onboarding] -.->|執筆開始前の導入| RP
     RP[research-plan-workshop] --> A
     RP --> F
+    RP -.->|通時的なら| DCT[diachronic-claim-typing]
+    DCT --> A
     A[literature-search] --> SC[source-criticism-gate]
     SC --> B[pdf-paper-ingestion]
     B --> C[academic-paper-translation]
@@ -58,6 +61,7 @@ graph TD
 
     F[scholarly-concept-modeling] -.->|任意の段階で適用| G
     F -.->|任意の段階で適用| H
+    DCT -.->|T3–T5 照合| H
     J[session-research-handoff] -.->|セッション終了時| A
     J -.->|セッション終了時| I
     PR[pre-reading-briefing] -.->|通読・校閲前| H
@@ -67,6 +71,7 @@ graph TD
     style K fill:#c8e6c9,stroke:#2e7d32
     style RP fill:#ffe0b2,stroke:#ef6c00
     style F fill:#e1bee7,stroke:#6a1b9a
+    style DCT fill:#e1bee7,stroke:#6a1b9a
     style J fill:#fff9c4,stroke:#f9a825
     style PR fill:#fff9c4,stroke:#f9a825
     style FD fill:#fff9c4,stroke:#f9a825
@@ -78,6 +83,7 @@ graph TD
 - 🟢 `paper-writing-onboarding` — 執筆開始前の導入スキル（初めての執筆・プロジェクト開始時に発動）
 - 🟠 `research-plan-workshop` — Phase 0 の対話型計画スキル（研究問いが未確定の時に発動）
 - 🟣 `scholarly-concept-modeling` — 概念定義の横断スキル（論文構成や新概念導入時に随時発動）
+- 🟣 `diachronic-claim-typing` — 通時的主張の型付け（概念史・系譜学の文献調査前・接続文の前に発動）
 - 🟡 `session-research-handoff` — セッション引継ぎの横断スキル（作業終了時・コンテキスト制限接近時に発動）
 - 🟡 `pre-reading-briefing` — 校閲期の読解支援スキル（草稿通読・査読共有の前に発動）
 - 🟡 `friction-driven-skill-improvement` — 摩擦観察・改善起票の横断スキル（セッション中の摩擦検出時・終了時に発動）

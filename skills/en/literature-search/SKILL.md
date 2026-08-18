@@ -1,6 +1,6 @@
 ---
 name: literature-search
-version: 1.1.0
+version: 1.1.1
 description: Use during research planning or literature search phase to query open-access paper databases (OpenAlex, arXiv, Crossref, Semantic Scholar), discover opposing scholarly factions, and build literature matrices with contestation status
 ---
 
@@ -13,6 +13,8 @@ Search open-access academic literature across configured providers (OpenAlex, ar
 - At the start of a new research project or thesis chapter
 - When a new research question, concept, or claim requires supporting literature
 - When a reviewer requests additional references on a specific topic
+
+For diachronic papers (conceptual history, genealogy, institutional history), invoke [`diachronic-claim-typing`](../diachronic-claim-typing/SKILL.md) before API search. Channels outside these providers (classical digital libraries, J-STAGE, CiNii) are Step 3 of that skill.
 
 ## Provider Configuration
 Add, enable, or disable API endpoints in `config/literature_providers.json`:

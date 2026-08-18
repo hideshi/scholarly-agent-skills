@@ -1,6 +1,6 @@
 ---
 name: claim-evidence-gate
-version: 1.4.0
+version: 1.4.1
 description: Use when validating claims against primary sources, empirical data, or citation evidence prior to submission or peer review
 ---
 
@@ -13,6 +13,8 @@ Apply invariant validation discipline to verify that every thesis claim in the m
 - After completing a draft of each chapter or major section
 - During the final pre-submission review phase
 - When a reviewer or collaborator raises concerns about evidentiary support
+
+For diachronic claims (transmission, juxtaposition, continuity, novelty), check the [`diachronic-claim-typing`](../diachronic-claim-typing/SKILL.md) inventory. Do not PASS transmission (T3) on similarity alone.
 
 ## Evaluation Steps
 

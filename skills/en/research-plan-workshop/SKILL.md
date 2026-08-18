@@ -1,6 +1,6 @@
 ---
 name: research-plan-workshop
-version: 1.0.0
+version: 1.0.1
 description: Use when starting a new research project or when the research question is still unsettled, to draft a one-page research plan (question, audience/venue, definition of done) through interactive dialogue with the user
 ---
 
@@ -136,7 +136,7 @@ Write `docs/design/research-plan.md` (one page maximum):
 Keep optional sections (scope, open items) to short bullets. The one-page limit outranks extra sections.
 
 ## After Completion
-Propose [`scholarly-concept-modeling`](../scholarly-concept-modeling/SKILL.md) as the next move (do not force it). If the venue is still tentative, note in the plan that [`submission-venue-advisor`](../submission-venue-advisor/SKILL.md) will reselect it after manuscript verification.
+Propose [`scholarly-concept-modeling`](../scholarly-concept-modeling/SKILL.md) as the next move (do not force it). If the method is diachronic (conceptual history, genealogy, institutional history), propose [`diachronic-claim-typing`](../diachronic-claim-typing/SKILL.md) before literature search. If the venue is still tentative, note in the plan that [`submission-venue-advisor`](../submission-venue-advisor/SKILL.md) will reselect it after manuscript verification.
 
 ## Outputs
 - `docs/design/research-plan.md` (Research plan: question, target venue, definition of done)

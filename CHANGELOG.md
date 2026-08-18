@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.7.0] - 2026-08-18
+
+### Added
+- **`diachronic-claim-typing`** (ja/en) v1.0.0: type diachronic claims (T0–T5, T3b) before literature search and before cross-period sentences; inventory as SoT; prohibition N1 (non-identification). From jiatama-supremacism friction; Kimi K3 APPROVE WITH REVISIONS.
+
+### Changed
+- `literature-search` (v1.1.1), `claim-evidence-gate` (v1.4.1), `research-plan-workshop` (v1.0.1): one-line pointers (required).
+- `paper-writing-onboarding` (v1.1.1), `literature-gap-analysis` (v1.0.1), `counter-argument-tdd` (v1.4.1): optional pointers.
+
+---
+
 ## [1.6.0] - 2026-08-17
 
 ### Added

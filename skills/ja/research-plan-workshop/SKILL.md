@@ -1,6 +1,6 @@
 ---
 name: research-plan-workshop
-version: 1.0.0
+version: 1.0.1
 description: 新しい研究プロジェクトの開始時・研究問いが未確定の時に、AIエージェントとの対話を通じて研究計画（研究問い・読者/提出先・完成の定義）を1ページに言語化するスキル
 ---
 
@@ -136,7 +136,7 @@ Turn 1 を踏まえ、**1文の研究問い候補を2〜3個**提示する。各
 必須3項目以外（スコープ・未決事項）は短い箇条書きに限り、1ページ制約を優先する。
 
 ## 完了後
-[`scholarly-concept-modeling`](../scholarly-concept-modeling/SKILL.md) を次の一手として提案する（強制しない）。提出先が暫定なら、本文検証後に [`submission-venue-advisor`](../submission-venue-advisor/SKILL.md) で再選定すると計画に書いておく。
+[`scholarly-concept-modeling`](../scholarly-concept-modeling/SKILL.md) を次の一手として提案する（強制しない）。方法論が概念史・系譜学・制度史など通時的なら、文献検索の前に [`diachronic-claim-typing`](../diachronic-claim-typing/SKILL.md) を提案する。提出先が暫定なら、本文検証後に [`submission-venue-advisor`](../submission-venue-advisor/SKILL.md) で再選定すると計画に書いておく。
 
 ## 成果物
 - `docs/design/research-plan.md` (研究計画書: 研究問い・提出先・完成の定義)

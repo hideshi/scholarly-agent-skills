@@ -19,6 +19,7 @@ This repository provides **tool-agnostic AI agent skills and rules** that functi
 - **`claim-evidence-gate`**: Invariant validation discipline to audit claims against primary sources, empirical data, and citations.
 - **`literature-gap-analysis`**: Spec Gap Analysis to compare existing literature (AS-IS) with paper novelty (TO-BE) for Introduction sections.
 - **`literature-search`**: Multi-provider open-access paper search across OpenAlex, arXiv, Crossref, and Semantic Scholar.
+- **`diachronic-claim-typing`**: Type diachronic claims and audit period-section selection, transmission, continuity, and novelty over-claims.
 - **`source-criticism-gate`**: Audit source trustworthiness (Tier 1–3) and block unverified websites, blogs, or social media.
 - **`pdf-paper-ingestion`**: Native PDF paper conversion to Markdown with automatic figure/image extraction.
 - **`academic-paper-translation`**: Translate foreign papers into configured native language with bilingual glossaries and parallel paragraphs.

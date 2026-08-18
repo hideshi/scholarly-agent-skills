@@ -1,6 +1,6 @@
 ---
 name: paper-writing-onboarding
-version: 1.1.0
+version: 1.1.1
 description: 学術論文を初めて書く時・新しい研究プロジェクトの開始時に、リポジトリ構造の理解・初期セットアップ・フェーズ別執筆ワークフローの全体像に加え、引用作法・研究倫理など学術コミュニティの基本作法を案内するオンボーディングスキル
 ---
 
@@ -46,6 +46,7 @@ docs/
 → [`scholarly-concept-modeling`](../scholarly-concept-modeling/SKILL.md) を発動し、中核概念の定義と境界づけを行う。多義語のまま執筆を始めると後工程で全体的な書き直しが発生する。
 
 ### Phase 2: 文献調査
+→ 通時的論文では先に [`diachronic-claim-typing`](../diachronic-claim-typing/SKILL.md) で主張を型付けする。
 → [`literature-search`](../literature-search/SKILL.md) で関連文献を収集し、[`pdf-paper-ingestion`](../pdf-paper-ingestion/SKILL.md) で論文を Markdown 化、必要に応じて [`academic-paper-translation`](../academic-paper-translation/SKILL.md) で対訳化する。
 → 引用候補の情報源は [`source-criticism-gate`](../source-criticism-gate/SKILL.md) で Tier 1/2 のみに選別する。
 

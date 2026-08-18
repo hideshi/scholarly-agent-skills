@@ -1,6 +1,6 @@
 ---
 name: counter-argument-tdd
-version: 1.4.0
+version: 1.4.1
 description: Use before drafting sections or paragraphs to enumerate counter-arguments and draft resolutions that withstand peer review
 ---
 
@@ -53,6 +53,8 @@ When using statistical trends or comparative figures in your argument, evaluate 
 When listing objections, consult the Contestation Status column of `docs/<paper-id>/literature/literature-matrix.md` (or `docs/literature/literature-matrix.md` in single-paper repositories):
 - If any claim relies on `contested` / `contradicted` literature or propositions, **enumerate at least one objection drawn from the opposing camp's representative papers** as a test case.
 - If a load-bearing claim remains `unknown`, consider returning to `literature-search` Step 1.5 (Faction Discovery).
+
+For diachronic papers, add cherry-picking of period-sections, anachronism (reading a coined concept back onto historical actors), and missing transmission evidence if they are not already listed ([`diachronic-claim-typing`](../diachronic-claim-typing/SKILL.md)).
 
 *Note: This check reinforces "imagined objections" with "real objections" and functions as pre-validation for the `Field Disagreement` axis in [claim-evidence-gate](../claim-evidence-gate/SKILL.md).*
 

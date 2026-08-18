@@ -1,6 +1,6 @@
 ---
 name: literature-search
-version: 1.1.0
+version: 1.1.1
 description: 研究課題の設定時・文献調査フェーズにおいて、OpenAlex/arXiv/Crossref/Semantic Scholar から多角的論文検索・対立陣営探索・係争ステータス付きマトリクス作成を行うスキル
 ---
 
@@ -13,6 +13,8 @@ description: 研究課題の設定時・文献調査フェーズにおいて、O
 - 新しい研究テーマ・論文テーマの設定時
 - 新しい論点や概念に関連する文献が必要になった時
 - 査読者から追加の参考文献を求められた時
+
+通時的論文（概念史・系譜学・制度史等）では、API 検索の前に [`diachronic-claim-typing`](../diachronic-claim-typing/SKILL.md) を発動する。古典デジタルライブラリ・J-STAGE・CiNii などプロバイダー外チャネルは同スキル Step 3。
 
 ## 設定によるプロバイダー拡張
 `config/literature_providers.json` に新しいAPIエンドポイント（または独自の論文検索サーバー）を追加・有効化/無効化できます：

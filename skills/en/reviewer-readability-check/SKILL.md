@@ -1,13 +1,13 @@
 ---
 name: reviewer-readability-check
-version: 1.0.0
-description: When a chapter draft is completed/revised or before manuscript build, verify with check_reviewer_readability.py that the prose is at reviewer-readable vocabulary level (internal codes, timestamps, version numbers removed from prose), and classify findings as must-fix / needs-review / acceptable with a recorded rationale
+version: 1.1.0
+description: When a chapter draft is completed/revised or before manuscript build, verify with check_reviewer_readability.py that the prose is at reviewer-readable vocabulary level (internal codes, timestamps, version numbers removed from prose) and that section numbering is consistent (branch suffixes, gaps, duplicates, dangling references), and classify findings as must-fix / needs-review / acceptable with a recorded rationale
 ---
 
 # Reviewer-Readability Check Skill
 
 ## Purpose
-Manuscript prose (`docs/<paper-id>/chapters/`) is the reviewer-facing academic layer. Internal symbols (`PROP-*`, `SCAF-FAIL`, `RQ-*`, `PH-*`, sentence-subject `NC-xx`) and careless exposure of JST timestamps or protocol version numbers impede comprehension. This skill maps `scripts/check_reviewer_readability.py` output to known patterns, classifies each finding as must-fix / needs-review / acceptable, and presents a rationale-backed summary to the author. The goal is to remove dependence on manual read-throughs for readability assurance.
+Manuscript prose (`docs/<paper-id>/chapters/`) is the reviewer-facing academic layer. Internal symbols (`PROP-*`, `SCAF-FAIL`, `RQ-*`, `PH-*`, sentence-subject `NC-xx`) and careless exposure of JST timestamps or protocol version numbers impede comprehension. Section-number anomalies left over from drafting — branch suffixes (`3.2b`), gaps, duplicates, and dangling `§` cross-references — are editing traces that must not survive into the final build. This skill maps `scripts/check_reviewer_readability.py` output to known patterns, classifies each finding as must-fix / needs-review / acceptable, and presents a rationale-backed summary to the author. The goal is to remove dependence on manual read-throughs for readability assurance.
 
 ## When to Use
 - When a chapter draft is completed or revised (mandated by `rules/en/reviewer-readability-rule.md`)
@@ -46,6 +46,10 @@ If PASS with zero findings, report and stop. Otherwise proceed to Step 2.
 | `WARN/version` (`v2.x` in prose) | needs-review | Acceptable where the protocol spec itself is the topic; otherwise use "after the protocol revision" etc. |
 | `WARN/jargon` (`grounding`, `ingestion`, `stub`, ...) | needs-review | Parenthesized glosses of defined terms are acceptable; otherwise translate |
 | `WARN/density` (3+ codes in one line) | needs-review | Split the paragraph or translate to plain description |
+| `FAIL/secnum-branch` (branch suffix like `3.2b`) | must-fix | Insertion trace from drafting. Renumber to a plain sequence and update all in-text references |
+| `FAIL/secnum-dup` (duplicate section number) | must-fix | Renumber the headings |
+| `WARN/secnum-gap` (missing section number) | needs-review | Acceptable if intentional (e.g. planned split); otherwise renumber |
+| `WARN/secnum-dangling` (`§` ref with no target) | needs-review | References to external works' sections (three-level numbers like `§2.1.1`) are out of scope; fix if it is an internal reference error |
 
 For deliberate exceptions, add `<!-- readability:ignore -->` to the line and record the rationale in the log (do not abuse).
 

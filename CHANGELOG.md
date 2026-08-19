@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.8.0] - 2026-08-20
+
+### Added
+- **`reviewer-readability-check` (ja/en) v1.1.0**: section-number integrity checks for the review phase. `check_reviewer_readability.py` now detects branch-suffixed insertion traces (`3.2b`, FAIL), duplicate heading numbers (FAIL), gaps in heading sequences (WARN), and dangling `§x.y` cross-references (WARN; three-level references to external works are out of scope). From jiatama-supremacism friction: a `§3.2b` insertion was discovered by the author, not by any gate.
+
+---
+
 ## [1.7.0] - 2026-08-18
 
 ### Added

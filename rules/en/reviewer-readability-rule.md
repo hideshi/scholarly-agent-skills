@@ -9,7 +9,7 @@ Manuscript chapters (`docs/<paper-id>/chapters/`) are the reviewer-facing academ
 
 | Layer | Scope | Rule |
 | :--- | :--- | :--- |
-| **Prose** | Paragraphs, headings, lists in chapter files | Academic description only. Internal codes (`PROP-*`, `SCAF-FAIL`, `RQ-*`, `PH-*`), JST timestamps, and version numbers are removed by default |
+| **Prose** | Paragraphs, headings, lists in chapter files | Academic description only. Internal codes (`PROP-*`, `SCAF-FAIL`, `RQ-*`, `PH-*`), JST timestamps, and version numbers are removed by default. Section numbers must be a plain sequence: no branch suffixes (`3.2b`), gaps, duplicates, or dangling `§` references |
 | **Tables** | Markdown tables (lines starting with `\|`) | Codes may remain, but an accompanying gloss (table note or in-cell) is required |
 | **Appendix / SoT** | Appendices A–C, verification inventory, dialogue logs | Full code definitions and audit trail. Exempt from scanning |
 

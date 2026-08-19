@@ -4,7 +4,9 @@ Reviewer-Readability Check for academic paper manuscripts.
 
 Detects internal workflow symbols (coding-scheme IDs, protocol versions,
 wall-clock timestamps, internal jargon) leaking into manuscript prose that
-external reviewers cannot interpret.
+external reviewers cannot interpret. Also checks section-number integrity
+(branch-suffixed insertion traces like 3.2b, gaps, duplicates, and dangling
+§x.y cross-references) for the review phase.
 
 Three-layer vocabulary policy (rules/ja/reviewer-readability-rule.md):
   1. Prose   — academic description only; internal codes removed
@@ -42,6 +44,15 @@ JST_PATTERN = re.compile(r"\b\d{1,2}:\d{2}\s*JST\b")
 VERSION_PATTERN = re.compile(r"\bv\d+\.\d+\.\d+\b")
 JARGON_PATTERN = re.compile(r"\b(?:grounding|ingestion|stub)\b", re.IGNORECASE)
 
+# Section-number integrity (校閲期の編集痕検出):
+#   branch   — letter-suffixed numbers (3.2b) are insertion traces from drafting
+#   gap      — missing numbers in a heading sequence (3.1 -> 3.3)
+#   dup      — the same heading number twice in one file
+#   dangling — a §x.y reference whose target heading does not exist
+SECNUM_HEADING = re.compile(r"^(#{1,6})\s*(\d+(?:\.\d+)+)([a-z])?\b")
+SECNUM_BRANCH = re.compile(r"\b\d+\.\d+[a-z]\b")
+SECNUM_REF = re.compile(r"§\s*(\d+\.\d+)(?!\.)")
+
 # Parenthetical spans (full/half width) and "ID（gloss）" adjacency are glosses.
 _PAREN_SPAN = re.compile(r"（[^（）]*）|\([^()]*\)")
 
@@ -55,6 +66,10 @@ HINTS = {
     "version": "バージョン番号が本文に出ています。プロトコル仕様そのものが主題か確認してください",
     "jargon": "内部工程語の可能性があります。日本語化または括弧内 gloss を検討してください",
     "density": "1行に内部コードが密集しています。段落の分割・日本語化を検討してください",
+    "secnum-branch": "枝番（3.2b 等）は執筆過程の編集痕です。最終版では連番にリナンバリングし、本文中の参照も一括更新してください",
+    "secnum-gap": "節番号に欠番があります。意図的な欠番か確認してください",
+    "secnum-dup": "節番号が重複しています。見出しを連番に修正してください",
+    "secnum-dangling": "§ 参照先の節が見つかりません。外部文献の節参照なら対応不要です",
 }
 
 
@@ -97,13 +112,34 @@ def iter_prose_lines(content: str) -> List[Tuple[int, str]]:
         yield idx, raw
 
 
-def scan_file(file_path: Path) -> List[Finding]:
+def collect_sections(files: List[Path]) -> set:
+    """Build the set of section numbers defined by headings across files."""
+    sections = set()
+    for fp in files:
+        try:
+            content = fp.read_text(encoding="utf-8")
+        except Exception:
+            continue
+        for raw in content.splitlines():
+            m = SECNUM_HEADING.match(raw.strip())
+            if m:
+                sections.add(m.group(2) + (m.group(3) or ""))
+                sections.add(m.group(2))
+    return sections
+
+
+def scan_file(file_path: Path, known_sections: set | None = None) -> List[Finding]:
     findings: List[Finding] = []
     try:
         content = file_path.read_text(encoding="utf-8")
     except Exception as e:
         print(f"⚠️ Error reading {file_path}: {e}", file=sys.stderr)
         return findings
+
+    if known_sections is None:
+        known_sections = collect_sections([file_path])
+
+    headings: List[Tuple[int, str, str]] = []  # (line_no, base, suffix)
 
     for line_no, line in iter_prose_lines(content):
         body = strip_glosses(line)
@@ -127,6 +163,39 @@ def scan_file(file_path: Path) -> List[Finding]:
         for m in JARGON_PATTERN.findall(jargon_line):
             findings.append(Finding(file_path, line_no, "WARN", "jargon", m, snippet))
 
+        heading = SECNUM_HEADING.match(line.strip())
+        if heading:
+            headings.append((line_no, heading.group(2), heading.group(3) or ""))
+
+        for m in set(SECNUM_BRANCH.findall(body)):
+            findings.append(Finding(file_path, line_no, "FAIL", "secnum-branch", m, snippet))
+
+        for ref in set(SECNUM_REF.findall(body)):
+            if ref not in known_sections:
+                findings.append(Finding(file_path, line_no, "WARN", "secnum-dangling", f"§{ref}", snippet))
+
+    # Heading sequence: duplicates (exact token) and gaps in the numeric tail.
+    seen: dict[str, int] = {}
+    for line_no, base, suffix in headings:
+        token = base + suffix
+        if token in seen:
+            findings.append(Finding(file_path, line_no, "FAIL", "secnum-dup", token, f"line {seen[token]} との重複"))
+        else:
+            seen[token] = line_no
+    twos = [
+        (tuple(int(p) for p in base.split(".")[:2]), line_no)
+        for line_no, base, _ in headings
+        if base.count(".") == 1
+    ]
+    deduped = sorted({num for num, _ in twos})
+    first_line = {num: line for num, line in reversed(twos)}
+    for (x1, y1), (x2, y2) in zip(deduped, deduped[1:]):
+        if x1 == x2 and y2 - y1 > 1:
+            missing = ", ".join(f"{x1}.{y}" for y in range(y1 + 1, y2))
+            findings.append(
+                Finding(file_path, first_line[(x2, y2)], "WARN", "secnum-gap", missing, f"{x1}.{y1} と {x2}.{y2} の間に欠番")
+            )
+
     return findings
 
 
@@ -143,8 +212,9 @@ def scan_target(target_path: Path) -> List[Finding]:
         print(f"❌ Error: Target path '{target_path}' does not exist.", file=sys.stderr)
         return all_findings
 
+    known_sections = collect_sections(files)
     for file_path in sorted(files):
-        all_findings.extend(scan_file(file_path))
+        all_findings.extend(scan_file(file_path, known_sections))
     return all_findings
 
 

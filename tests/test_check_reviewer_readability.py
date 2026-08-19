@@ -88,6 +88,60 @@ class TestProseScanning(unittest.TestCase):
         self.assertEqual(findings, [])
 
 
+class TestSectionNumbering(unittest.TestCase):
+    def tearDown(self):
+        if getattr(self, "tmp", None):
+            self.tmp.unlink(missing_ok=True)
+
+    def scan(self, content: str):
+        self.tmp = write_temp(content)
+        return scan_file(self.tmp)
+
+    def test_branch_heading_is_fail(self):
+        findings = self.scan("## 3.2 制度文の断面\n\n## 3.2b 追加の断面\n")
+        self.assertTrue(any(f.severity == "FAIL" and f.kind == "secnum-branch" for f in findings))
+
+    def test_branch_reference_in_prose_is_fail(self):
+        findings = self.scan("## 3.2b 追加\n\n詳細は §3.2b を参照。\n")
+        fails = [f for f in findings if f.kind == "secnum-branch"]
+        self.assertTrue(any(f.match == "3.2b" for f in fails))
+
+    def test_clean_sequence_passes(self):
+        findings = self.scan("## 3.1 導入\n\n## 3.2 展開\n\n## 3.3 まとめ\n\n§3.1 で述べた。\n")
+        self.assertFalse(any(f.kind.startswith("secnum") for f in findings))
+
+    def test_gap_is_warn(self):
+        findings = self.scan("## 3.1 導入\n\n## 3.3 まとめ\n")
+        gaps = [f for f in findings if f.kind == "secnum-gap"]
+        self.assertTrue(gaps and gaps[0].severity == "WARN" and "3.2" in gaps[0].match)
+
+    def test_duplicate_heading_is_fail(self):
+        findings = self.scan("## 4.1 前提\n\n## 4.1 重複した見出し\n")
+        self.assertTrue(any(f.severity == "FAIL" and f.kind == "secnum-dup" for f in findings))
+
+    def test_dangling_reference_is_warn(self):
+        findings = self.scan("## 5.1 前提\n\n§5.2 で検討する。\n")
+        self.assertTrue(any(f.kind == "secnum-dangling" and f.match == "§5.2" for f in findings))
+
+    def test_three_level_external_ref_passes(self):
+        findings = self.scan("## 4.1 前提\n\n先行研究（小越 2026, §2.1.1）を参照。\n")
+        self.assertFalse(any(f.kind == "secnum-dangling" for f in findings))
+
+    def test_branch_insertion_pattern_no_gap_no_dup(self):
+        content = "## 3.1 導入\n\n## 3.2 制度文\n\n## 3.2b 追加\n\n## 3.3 まとめ\n"
+        findings = self.scan(content)
+        self.assertFalse(any(f.kind in ("secnum-gap", "secnum-dup") for f in findings))
+        self.assertTrue(any(f.kind == "secnum-branch" for f in findings))
+
+    def test_cross_file_reference_resolves(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            d = Path(tmp)
+            (d / "chapter3.md").write_text("## 3.1 導入\n", encoding="utf-8")
+            (d / "chapter4.md").write_text("## 4.1 前提\n\n§3.1 を踏まえる。\n", encoding="utf-8")
+            findings = scan_target(d)
+            self.assertFalse(any(f.kind == "secnum-dangling" for f in findings))
+
+
 class TestMainAndTarget(unittest.TestCase):
     def test_main_exit_codes(self):
         with tempfile.TemporaryDirectory() as tmp:

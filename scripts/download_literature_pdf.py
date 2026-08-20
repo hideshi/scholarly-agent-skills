@@ -4,7 +4,8 @@ Resolve and download open-access PDFs for literature grounding.
 
 Resolves candidate PDF URLs via OpenAlex and Semantic Scholar, downloads with
 publisher-appropriate headers (Referer for Springer/Wiley), validates PDF magic
-bytes, and optionally hands off to convert_pdf_to_markdown.py.
+bytes, detects bot-challenge HTML (reCAPTCHA / Cloudflare) for human handoff,
+and optionally hands off to convert_pdf_to_markdown.py.
 
 Uses ONLY Python standard library.
 
@@ -31,6 +32,51 @@ from search_literature import build_request_headers, load_config
 FRONTMATTER_RE = re.compile(r"^---\s*\n(.*?)\n---\s*\n", re.DOTALL)
 PDF_MAGIC = b"%PDF"
 MIN_PDF_BYTES = 1024
+
+# HTML bot-challenge pages (reCAPTCHA, Cloudflare Turnstile, etc.) cannot be solved by scripts.
+BOT_CHALLENGE_MARKERS = (
+    b"recaptcha",
+    b"g-recaptcha",
+    b"cf-turnstile",
+    b"challenges.cloudflare.com",
+    b"just a moment",
+    b"performing security verification",
+    b"checking your browser",
+    b"bot detection",
+    b"turnstile",
+)
+
+HUMAN_PDF_HANDOFF_TEMPLATE = """\
+HUMAN HANDOFF (bot challenge): Automated download cannot pass reCAPTCHA / Cloudflare Turnstile.
+
+Ask the user to:
+1. Open the official landing page in a browser: {landing}
+2. Complete the challenge and download the PDF.
+3. Save as: docs/<paper-id>/literature/papers/_downloads/{slug}.pdf
+4. Re-run check_literature_grounding.py (and convert_pdf_to_markdown.py if upgrading to full-text).
+
+Do NOT retry the same URL in a loop or use unauthorized mirrors.
+"""
+
+
+def is_bot_challenge_html(data: bytes) -> bool:
+    """Return True when response body looks like a CAPTCHA / bot-check interstitial."""
+    if not data or data.startswith(PDF_MAGIC):
+        return False
+    head = data[:8192].lower()
+    if b"<html" not in head and b"<!doctype html" not in head:
+        return False
+    return any(marker in head for marker in BOT_CHALLENGE_MARKERS)
+
+
+def format_human_handoff(slug: str, landing_url: str = "") -> str:
+    landing = landing_url.strip() or f"(see source_url in literature/papers/{slug}.md)"
+    return HUMAN_PDF_HANDOFF_TEMPLATE.format(slug=slug, landing=landing)
+
+
+def needs_human_handoff(error_message: str) -> bool:
+    lowered = (error_message or "").lower()
+    return "bot-challenge" in lowered or "human handoff" in lowered
 
 
 @dataclass
@@ -174,11 +220,20 @@ def download_pdf_url(
         with urllib.request.urlopen(req, timeout=timeout) as response:
             data = response.read()
     except urllib.error.HTTPError as exc:
+        body = b""
+        try:
+            body = exc.read()
+        except Exception:
+            pass
+        if is_bot_challenge_html(body) or exc.code in (403, 429, 503):
+            return False, "bot-challenge (reCAPTCHA/Cloudflare): human handoff required"
         return False, f"HTTP {exc.code}"
     except Exception as exc:
         return False, str(exc)
 
     if not is_valid_pdf_bytes(data):
+        if is_bot_challenge_html(data):
+            return False, "bot-challenge (reCAPTCHA/Cloudflare): human handoff required"
         return False, "not a valid PDF (empty, HTML, or too small)"
 
     dest.parent.mkdir(parents=True, exist_ok=True)
@@ -215,6 +270,11 @@ def download_for_doi(
 
     if dest.exists():
         dest.unlink()
+
+    if needs_human_handoff(last_error):
+        landing = infer_referer(candidates[0][1]) if candidates else f"https://doi.org/{doi}"
+        print(format_human_handoff(slug, landing), file=sys.stderr)
+
     return DownloadResult(doi, slug, False, None, "", last_error)
 
 

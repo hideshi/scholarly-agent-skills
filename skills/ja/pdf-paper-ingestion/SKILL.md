@@ -1,6 +1,6 @@
 ---
 name: pdf-paper-ingestion
-version: 1.3.0
+version: 1.4.0
 description: PDF論文をダウンロードした時やテキスト分析時に、見出し構造抽出・埋め込み画像 (JPEG/PNG) の切り出し保存・Markdown埋め込みを行うスキル (※スキャンPDFは非対応・OCR推奨)
 ---
 
@@ -18,9 +18,10 @@ description: PDF論文をダウンロードした時やテキスト分析時に�
 > 1. **スキャンPDF (画像のみ)**: 埋め込みテキストを含まないスキャンPDFは空テキスト（注記のみ）が出力されます。OCR処理が必要です。
 > 2. **CJK (日本語・中国語・韓国語) CIDFont PDF**: 固有エンコーディングによりテキストが空または文字化けする場合があります。
 > 3. **暗号化・パスワード保護PDF**: 読み込み不可のためエラー終了します。
-> 4. **出版社 paywall（Wiley / MISQ 等）**: `download_literature_pdf.py` は 403 等で失敗しうる → `manual-stub` + ページ引用が正規経路。
-> 5. **書籍・学位論文**: 自動 DL 不可 → `manual-stub` + ページ excerpt。
-> 6. **機関リポジトリ**: Bristol / UvA 等の非標準 URL は API 解決外 → フォールバック URL リスト拡張が今後課題。
+> 4. **出版社 bot 対策（reCAPTCHA / Cloudflare Turnstile 等）**: `download_literature_pdf.py` は 403 や HTML チャレンジページを検出したら**即停止し人間へ移譲**する（Step 1b）。ブラウザ自動化での突破は試みない。
+> 5. **出版社 paywall（Wiley / MISQ 等、bot 対策なし）**: 403 等で失敗しうる → 人間移譲または `manual-stub` + ページ引用。
+> 6. **書籍・学位論文**: 自動 DL 不可 → `manual-stub` + ページ excerpt。
+> 7. **機関リポジトリ**: Bristol / UvA 等の非標準 URL は API 解決外 → フォールバック URL リスト拡張が今後課題。
 
 > 詳細バックログ: [`docs/design/literature-download-backlog.md`](../../../docs/design/literature-download-backlog.md)
 
@@ -47,9 +48,22 @@ python3 scripts/download_literature_pdf.py \
   --ingest
 ```
 
-> paywall（Wiley/MISQ 等）で失敗した場合は `_ingestion-log.md` に記録し、`status: manual-stub` でページ検証付き stub を作成する。
+> paywall（Wiley/MISQ 等）で失敗した場合は `_ingestion-log.md` に記録し、`status: manual-stub` でページ検証付き stub を作成する。**reCAPTCHA / Cloudflare 等の bot 対策を検出した場合は Step 1b へ（同一 URL のリトライループ禁止）。**
 
 **一次資料としての `_downloads/`**: 取得した PDF は `docs/<paper-id>/literature/papers/_downloads/{slug}.pdf` に置き、**gitignore しない**（再照合可能な原本としてバージョン管理する）。ノート（`papers/*.md`）は転写であり、`status: full-text` なのに PDF が無いと grounding ゲートが WARN する。再配布権の無い PDF はダウンロードせず stub に留める。
+
+### Step 1b: 人間への PDF 取得移譲（bot 対策検出時）
+
+`download_literature_pdf.py` が `bot-challenge (reCAPTCHA/Cloudflare): human handoff required` を返したら、**エージェントは取得を諦め、著者に依頼する**。ブラウザ MCP・curl リトライ・非公式ミラー探索は行わない。
+
+**著者への依頼文（テンプレート）**:
+
+1. `papers/{slug}.md` の `source_url`（または DOI ランディングページ）をブラウザで開く
+2. reCAPTCHA / Cloudflare 等を完了し、公式 PDF をダウンロード
+3. `docs/<paper-id>/literature/papers/_downloads/{slug}.pdf` に保存（**ファイル名は slug に統一**。出版社の長いファイル名はリネーム）
+4. エージェントに再実行を依頼 → `check_literature_grounding.py` で再照合（必要なら `convert_pdf_to_markdown.py` で `full-text` 化）
+
+**存在例**: Wood et al. (1976) — Wiley/ACAMH の Free Access だが Cloudflare により自動 DL 不可（2026-08-20）。著者が `_downloads/wood-1976.pdf` を配置して解決。
 
 ### Step 2: PDF変換スクリプトの実行
 リポジトリ同梱の [`scripts/convert_pdf_to_markdown.py`](../../../scripts/convert_pdf_to_markdown.py) を実行する：

@@ -58,3 +58,4 @@ AI エージェントによる学術論文執筆時のハルシネーション�
   2. 実体データが取得できるまで該当記述を保留・修正する。
 - **学術文献引用の判定**: `python3 scripts/check_literature_grounding.py` が FAIL を返した場合、該当章/節の執筆・追記をブロックする（WARN は執筆継続可だが claim-evidence-gate 前に full-text 化を推奨）。
 - **ゲートは `papers/*.md` を内容の照合正本とし、`papers/_downloads/*.pdf` を一次資料の原本とする**: `status: full-text` のノートに対応する PDF が `_downloads/{slug}.pdf` に無い場合は WARN（Markdown は転写であり原本ではない）。`_downloads/` は `.gitignore` しない（バージョン管理する）。再配布権の無い PDF は取得せず `manual-stub` に留める。判定は frontmatter・本文テキスト長・PDF 有無に基づく。
+- **bot 対策（reCAPTCHA / Cloudflare 等）**: `download_literature_pdf.py` が bot チャレンジを検出した場合、エージェントは自動取得を中止し著者へ PDF 配置を依頼する（同一 URL のリトライ禁止）。手順は `pdf-paper-ingestion` Step 1b。

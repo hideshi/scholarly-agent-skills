@@ -1,6 +1,6 @@
 ---
 name: citation-traceability-audit
-version: 2.1.0
+version: 2.2.0
 description: 投稿前・各章完成時に、本文引用の書誌整合（matrix SoT）と文献実体化（papers/ Grounding）を監査し、references.mdを機械生成するスキル
 ---
 
@@ -57,6 +57,7 @@ python3 scripts/check_literature_grounding.py docs/chapters/ \
 
 > ⚠️ **書籍・学位論文**: PDF 自動取得不可の文献は `status: manual-stub` + ページ番号付き書き抜きで実体化する（fact-grounding-rule §2-B-3）。
 > ⚠️ **一次資料 PDF**: `_downloads/` は gitignore しない。`full-text` 主張の再照合対象である。再配布権の無い PDF は置かず stub に留める（DISCLAIMER）。
+> ⚠️ **bot 対策（reCAPTCHA / Cloudflare）**: 自動 DL が `bot-challenge … human handoff required` を返した文献は、著者がブラウザで PDF を `_downloads/{slug}.pdf` に配置するまで WARN/stub のままとする（[`pdf-paper-ingestion`](../pdf-paper-ingestion/SKILL.md) Step 1b）。
 
 ### Step 3: `references.md` の自動派生生成
 照合完了後、`literature-matrix.md` から派生生成物として `docs/chapters/references.md` を自動生成する：

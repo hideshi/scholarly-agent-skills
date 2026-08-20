@@ -1,6 +1,6 @@
 ---
 name: citation-traceability-audit
-version: 2.1.0
+version: 2.2.0
 description: Audit bibliographic traceability (matrix SoT) and literature grounding (papers/) before submission; auto-generate references.md
 ---
 
@@ -56,6 +56,7 @@ python3 scripts/check_literature_grounding.py docs/chapters/ \
 
 > ⚠️ **Books & theses**: use `status: manual-stub` with page-referenced excerpts (fact-grounding-rule §2-B-3).
 > ⚠️ **Primary-source PDFs**: do not gitignore `_downloads/`. A `full-text` claim is re-auditable only against the PDF. Do not store PDFs the user has no right to redistribute (see DISCLAIMER).
+> ⚠️ **Bot challenges (reCAPTCHA / Cloudflare)**: When automated download returns `bot-challenge … human handoff required`, keep WARN/stub until the user places the PDF at `_downloads/{slug}.pdf` via browser ([`pdf-paper-ingestion`](../pdf-paper-ingestion/SKILL.md) Step 1b).
 
 ### Step 3: Auto-Generate `references.md`
 Auto-generate `docs/chapters/references.md` from `literature-matrix.md`:

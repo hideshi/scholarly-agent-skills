@@ -4,21 +4,23 @@
 | :--- | :--- |
 | **関連スクリプト** | `scripts/download_literature_pdf.py`, `scripts/search_literature.py`, `scripts/convert_pdf_to_markdown.py` |
 | **関連スキル** | `pdf-paper-ingestion`, `citation-traceability-audit`, `literature-search` |
-| **最終更新** | 2026-08-16 |
+| **最終更新** | 2026-08-20 |
 
 `download_literature_pdf.py`（P1 部分実装）以降も、以下は **自動化の対象外または未実装** として扱う。エージェントは curl 等での ad hoc 取得に頼らず、各項目の正規経路を優先すること。
 
 ---
 
-## 1. 出版社 paywall（HTTP 403 等）
+## 1. 出版社 paywall / bot 対策（HTTP 403 等）
 
-**例**: Wiley (`onlinelibrary.wiley.com`), MISQ / AIS 正規ルート（Hevner 2004 等）
+**例**: Wiley (`acamh.onlinelibrary.wiley.com`), MISQ / AIS 正規ルート（Hevner 2004 等）
 
 | 項目 | 内容 |
 | :--- | :--- |
-| **現状** | OpenAlex / Semantic Scholar が OA URL を返しても CDN が 403 を返すことがある |
-| **正規経路** | `status: manual-stub` + **ページ番号付き書き抜き**（二次文献経由の定義引用は要出典明示） |
-| **今後の検討** | Unpaywall API 連携（要メール登録）、著者ミラー URL のホワイトリスト、利用者提供 PDF の `--ingest` ハンドオフ |
+| **現状** | OpenAlex / Semantic Scholar が OA URL を返しても CDN が 403 を返す、または HTML に reCAPTCHA / Cloudflare Turnstile が挟まる |
+| **正規経路（bot 対策）** | `download_literature_pdf.py` が `bot-challenge … human handoff required` を返したら**即停止** → 著者がブラウザで PDF を `_downloads/{slug}.pdf` に配置（`pdf-paper-ingestion` Step 1b）。エージェントは MCP ブラウザ・curl リトライ・非公式ミラーで突破しない |
+| **正規経路（paywall / stub）** | `status: manual-stub` + **ページ番号付き書き抜き**（二次文献経由の定義引用は要出典明示） |
+| **実装済み（2026-08-20）** | スクリプトが HTML チャレンジページと 403/429/503 を検出し、人間移譲メッセージを stderr に出力 |
+| **今後の検討** | Unpaywall API 連携（要メール登録）、著者ミラー URL のホワイトリスト |
 
 ---
 

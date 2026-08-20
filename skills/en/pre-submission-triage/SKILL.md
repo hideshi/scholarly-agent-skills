@@ -1,6 +1,6 @@
 ---
 name: pre-submission-triage
-version: 1.1.0
+version: 1.2.0
 description: When running the pre-submission gate (check_pre_submission.py) or when WARN/FAIL output needs interpretation before submission, classify each finding against known patterns into "must-fix / needs-review / acceptable" and present and record a rationale-backed judgment summary
 ---
 
@@ -43,6 +43,7 @@ If every check is PASS with no WARN, report "gate passed" and stop. Otherwise pr
 | `status=manual-stub` | acceptable | Legitimate grounding form for books/theses where PDF auto-fetch is impossible (fact-grounding-rule §2-B-3). **Condition**: the `papers/*.md` records page-anchored excerpts (page-verified excerpts); without excerpts, treat as needs-review |
 | `status=abstract-only` | needs-review | Visually confirm whether the manuscript claim depends only on abstract-level content; if dependence is strong, upgrade to full-text or manual-stub with page excerpts |
 | `status=full-text but no PDF at _downloads/` | must-fix | The Markdown note is a transcription, not the original. Place the PDF at `_downloads/{slug}.pdf` and re-audit. If there is no redistribution right, drop to `manual-stub` |
+| `bot-challenge … human handoff required` (download script) | must-fix (human task) | Automated fetch blocked by reCAPTCHA/Cloudflare. Wait until the user saves the PDF to `_downloads/{slug}.pdf` via browser. Do not retry the same URL or hunt unofficial mirrors (pdf-paper-ingestion Step 1b) |
 
 #### fact-grounding
 

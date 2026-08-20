@@ -1,6 +1,6 @@
 ---
 name: pdf-paper-ingestion
-version: 1.3.0
+version: 1.4.0
 description: Use when ingesting downloaded PDF papers to extract text outline structure and extract embedded images (JPEG/PNG) into Markdown (Note: scanned image PDFs require external OCR)
 ---
 
@@ -18,9 +18,10 @@ Convert digital PDF paper files into structured Markdown while natively extracti
 > 1. **Scanned PDFs (image-only)**: No embedded text → empty body; OCR required.
 > 2. **CJK CIDFont PDFs**: Garbled or empty text extraction.
 > 3. **Encrypted / password-protected PDFs**: Rejected with an error.
-> 4. **Publisher paywalls (Wiley, MISQ, etc.)**: `download_literature_pdf.py` may get HTTP 403 → use `manual-stub` with page-verified excerpts.
-> 5. **Books & theses**: No automatic download → `manual-stub` with page excerpts.
-> 6. **Institutional repositories** (Bristol, UvA Pure, etc.): Non-standard URLs often missing from APIs → fallback URL list is a future extension.
+> 4. **Publisher bot challenges (reCAPTCHA / Cloudflare Turnstile, etc.)**: `download_literature_pdf.py` **stops immediately and hands off to the user** when it detects a challenge page (Step 1b). Do not attempt browser automation to bypass.
+> 5. **Publisher paywalls (Wiley, MISQ, etc., without bot interstitial)**: May fail with HTTP 403 → human handoff or `manual-stub` with page-verified excerpts.
+> 6. **Books & theses**: No automatic download → `manual-stub` with page excerpts.
+> 7. **Institutional repositories** (Bristol, UvA Pure, etc.): Non-standard URLs often missing from APIs → fallback URL list is a future extension.
 
 > Full backlog: [`docs/design/literature-download-backlog.md`](../../../docs/design/literature-download-backlog.md)
 
@@ -46,9 +47,22 @@ python3 scripts/download_literature_pdf.py \
   --ingest
 ```
 
-> Paywalled publishers (Wiley, MISQ, etc.) may still fail — log in `_ingestion-log.md` and use `manual-stub` with page-verified excerpts.
+> Paywalled publishers (Wiley, MISQ, etc.) may still fail — log in `_ingestion-log.md` and use `manual-stub` with page-verified excerpts. **When the script reports `bot-challenge (reCAPTCHA/Cloudflare): human handoff required`, go to Step 1b (no retry loops on the same URL).**
 
 **`_downloads/` as primary source**: keep fetched PDFs at `docs/<paper-id>/literature/papers/_downloads/{slug}.pdf` and **do not gitignore them** (they are the re-auditable original). The Markdown note is a transcription; `status: full-text` without a matching PDF is a grounding WARN. Do not download PDFs the user has no right to redistribute.
+
+### Step 1b: Human PDF handoff (bot challenge detected)
+
+When `download_literature_pdf.py` returns `bot-challenge (reCAPTCHA/Cloudflare): human handoff required`, **stop automated fetch and ask the user**. Do not retry with browser MCP, curl loops, or unofficial mirrors.
+
+**User request template**:
+
+1. Open `source_url` from `papers/{slug}.md` (or the DOI landing page) in a browser
+2. Complete reCAPTCHA / Cloudflare and download the official PDF
+3. Save to `docs/<paper-id>/literature/papers/_downloads/{slug}.pdf` (**rename to slug** if the publisher uses a long filename)
+4. Ask the agent to re-run `check_literature_grounding.py` (and `convert_pdf_to_markdown.py` if upgrading to `full-text`)
+
+**Example**: Wood et al. (1976) — Free Access on Wiley/ACAMH but blocked by Cloudflare for automation (2026-08-20). Resolved when the user placed `_downloads/wood-1976.pdf`.
 
 ### Step 2: Run the PDF Conversion Script
 Execute the included [`scripts/convert_pdf_to_markdown.py`](../../../scripts/convert_pdf_to_markdown.py):

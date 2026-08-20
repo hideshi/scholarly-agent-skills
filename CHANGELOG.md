@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.10.0] - 2026-08-20
+
+### Added
+- **Bot-challenge human handoff** (`download_literature_pdf.py`, `pdf-paper-ingestion` v1.4.0, `citation-traceability-audit` v2.2.0, `pre-submission-triage` v1.2.0, fact-grounding-rule ja/en): Detect reCAPTCHA / Cloudflare Turnstile HTML and HTTP 403/429/503; stop automated fetch and print human handoff instructions (save to `_downloads/{slug}.pdf`). From Wood et al. (1976) Wiley download friction.
+
+---
+
 ## [1.9.0] - 2026-08-20
 
 ### Changed

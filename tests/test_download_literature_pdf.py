@@ -10,8 +10,11 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from download_literature_pdf import (
     download_pdf_url,
+    format_human_handoff,
     infer_referer,
+    is_bot_challenge_html,
     is_valid_pdf_bytes,
+    needs_human_handoff,
     normalize_doi,
     parse_frontmatter,
     resolve_pdf_candidates,
@@ -40,6 +43,23 @@ class TestDownloadLiteraturePdf(unittest.TestCase):
         self.assertTrue(is_valid_pdf_bytes(b"%PDF-1.4\n" + b"x" * 2000))
         self.assertFalse(is_valid_pdf_bytes(b"<html>error</html>"))
         self.assertFalse(is_valid_pdf_bytes(b"%PDF tiny"))
+
+    def test_is_bot_challenge_html(self):
+        cloudflare = b"<!doctype html><html><title>Just a moment...</title></html>"
+        recaptcha = b"<html><div class='g-recaptcha'></div></html>"
+        self.assertTrue(is_bot_challenge_html(cloudflare))
+        self.assertTrue(is_bot_challenge_html(recaptcha))
+        self.assertFalse(is_bot_challenge_html(b"%PDF-1.4\n"))
+        self.assertFalse(is_bot_challenge_html(b"<html><body>404 Not Found</body></html>"))
+
+    def test_needs_human_handoff(self):
+        self.assertTrue(needs_human_handoff("bot-challenge (reCAPTCHA/Cloudflare): human handoff required"))
+        self.assertFalse(needs_human_handoff("HTTP 404"))
+
+    def test_format_human_handoff(self):
+        msg = format_human_handoff("wood-1976", "https://doi.org/10.1111/example")
+        self.assertIn("wood-1976.pdf", msg)
+        self.assertIn("https://doi.org/10.1111/example", msg)
 
     def test_parse_frontmatter(self):
         text = '---\ntitle: "Test"\ndoi: 10.1234/test\nstatus: abstract-only\n---\n\n# Body\n'
@@ -96,6 +116,32 @@ class TestDownloadLiteraturePdf(unittest.TestCase):
                 self.assertTrue(ok)
                 self.assertTrue(dest.exists())
                 self.assertTrue(is_valid_pdf_bytes(dest.read_bytes()))
+
+    def test_download_pdf_url_rejects_captcha_html(self):
+        html = b"<!doctype html><html><title>Just a moment...</title><body>cf-turnstile</body></html>"
+        import tempfile
+        import urllib.request
+
+        class FakeResponse:
+            def __init__(self, data):
+                self._data = data
+
+            def read(self):
+                return self._data
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                pass
+
+        with patch("urllib.request.urlopen", return_value=FakeResponse(html)):
+            with tempfile.TemporaryDirectory() as tmp:
+                dest = Path(tmp) / "test.pdf"
+                ok, msg = download_pdf_url("https://example.org/x.pdf", dest, {"User-Agent": "test"})
+                self.assertFalse(ok)
+                self.assertIn("bot-challenge", msg)
+                self.assertFalse(dest.exists())
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 ---
 name: pre-submission-triage
-version: 1.0.0
+version: 1.1.0
 description: 投稿前ゲート (check_pre_submission.py) の実行時・WARN/FAIL 出力の解釈が必要な時に、各検出項目を既知パターンに照合して「要修正 / 要確認 / 対応不要」の3分類で判断し、根拠付きの判断サマリを提示・記録するスキル
 ---
 
@@ -44,6 +44,7 @@ python3 scripts/check_pre_submission.py <paper-id> --repo-root <論文リポジ�
 | `no matching literature/papers/*.md artifact` (FAIL) | 要修正 | 引用に対応する実体ファイルが無い。`papers/*.md` を作成する |
 | `status=manual-stub` | 対応不要 | 書籍・学位論文等で PDF 自動取得不可の場合の正当な実体化形態（fact-grounding-rule §2-B-3）。**条件**: 当該 `papers/*.md` にページ番号付き抜粋（page-verified excerpts）が記録されていること。抜粋が無ければ要確認 |
 | `status=abstract-only` | 要確認 | 本文の主張が abstract の記述範囲に依存しているか目視確認。依存が強い場合は full-text 取得または manual-stub + ページ抜粋へ格上げ |
+| `status=full-text but no PDF at _downloads/` | 要修正 | Markdown ノートは転写であり原本ではない。公式 URL 等から PDF を `_downloads/{slug}.pdf` に置き再照合する。再配布権が無い場合は `manual-stub` へ落とす |
 
 #### fact-grounding
 

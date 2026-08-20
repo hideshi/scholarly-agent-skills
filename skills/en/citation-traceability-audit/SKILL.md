@@ -1,6 +1,6 @@
 ---
 name: citation-traceability-audit
-version: 2.0.0
+version: 2.1.0
 description: Audit bibliographic traceability (matrix SoT) and literature grounding (papers/) before submission; auto-generate references.md
 ---
 
@@ -47,14 +47,15 @@ python3 scripts/check_literature_grounding.py docs/chapters/ \
 
 **Verdicts**:
 - **FAIL**: no matching `papers/*.md` → **block writing** (fact-grounding-rule §5)
-- **WARN**: `status: manual-stub` or `abstract-only`, or insufficient body text
-- **PASS**: `status: full-text` with sufficient extracted text
+- **WARN**: `status: manual-stub` or `abstract-only`, or insufficient body text, or **`status: full-text` without `_downloads/{slug}.pdf`**
+- **PASS**: `status: full-text` with sufficient extracted text **and** a matching PDF under `_downloads/`
 
 **Required `papers/*.md` frontmatter**: `title`, `authors`, `year`, `doi`, `arxiv_id`, `status`, `source_url`, `version`
 
 **Output**: `docs/design/literature-grounding-report.md`
 
 > ⚠️ **Books & theses**: use `status: manual-stub` with page-referenced excerpts (fact-grounding-rule §2-B-3).
+> ⚠️ **Primary-source PDFs**: do not gitignore `_downloads/`. A `full-text` claim is re-auditable only against the PDF. Do not store PDFs the user has no right to redistribute (see DISCLAIMER).
 
 ### Step 3: Auto-Generate `references.md`
 Auto-generate `docs/chapters/references.md` from `literature-matrix.md`:

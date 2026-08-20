@@ -1,6 +1,6 @@
 ---
 name: pdf-paper-ingestion
-version: 1.2.0
+version: 1.3.0
 description: PDF論文をダウンロードした時やテキスト分析時に、見出し構造抽出・埋め込み画像 (JPEG/PNG) の切り出し保存・Markdown埋め込みを行うスキル (※スキャンPDFは非対応・OCR推奨)
 ---
 
@@ -49,6 +49,8 @@ python3 scripts/download_literature_pdf.py \
 
 > paywall（Wiley/MISQ 等）で失敗した場合は `_ingestion-log.md` に記録し、`status: manual-stub` でページ検証付き stub を作成する。
 
+**一次資料としての `_downloads/`**: 取得した PDF は `docs/<paper-id>/literature/papers/_downloads/{slug}.pdf` に置き、**gitignore しない**（再照合可能な原本としてバージョン管理する）。ノート（`papers/*.md`）は転写であり、`status: full-text` なのに PDF が無いと grounding ゲートが WARN する。再配布権の無い PDF はダウンロードせず stub に留める。
+
 ### Step 2: PDF変換スクリプトの実行
 リポジトリ同梱の [`scripts/convert_pdf_to_markdown.py`](../../../scripts/convert_pdf_to_markdown.py) を実行する：
 
@@ -86,6 +88,7 @@ python3 scripts/convert_pdf_to_markdown.py path/to/paper.pdf --output-dir docs/l
 変換された Markdown ファイルを `literature-gap-analysis`（先行研究ギャップ分析）や `claim-evidence-gate`（エビデンス検証ゲート）へ読み込ませ、テキスト分析を行う。
 
 ## 成果物
+- `docs/literature/papers/_downloads/[paper_name].pdf`（一次資料。バージョン管理する）
 - `docs/literature/papers/[paper_name].md`
 - `docs/literature/papers/assets/extracted_image_*.jpg`
 - `docs/literature/papers/assets/extracted_image_*.png`（PPM 正規化成功時）

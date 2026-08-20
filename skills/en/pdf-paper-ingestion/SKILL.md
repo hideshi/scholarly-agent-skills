@@ -1,6 +1,6 @@
 ---
 name: pdf-paper-ingestion
-version: 1.2.0
+version: 1.3.0
 description: Use when ingesting downloaded PDF papers to extract text outline structure and extract embedded images (JPEG/PNG) into Markdown (Note: scanned image PDFs require external OCR)
 ---
 
@@ -48,6 +48,8 @@ python3 scripts/download_literature_pdf.py \
 
 > Paywalled publishers (Wiley, MISQ, etc.) may still fail — log in `_ingestion-log.md` and use `manual-stub` with page-verified excerpts.
 
+**`_downloads/` as primary source**: keep fetched PDFs at `docs/<paper-id>/literature/papers/_downloads/{slug}.pdf` and **do not gitignore them** (they are the re-auditable original). The Markdown note is a transcription; `status: full-text` without a matching PDF is a grounding WARN. Do not download PDFs the user has no right to redistribute.
+
 ### Step 2: Run the PDF Conversion Script
 Execute the included [`scripts/convert_pdf_to_markdown.py`](../../../scripts/convert_pdf_to_markdown.py):
 
@@ -85,6 +87,7 @@ python3 scripts/convert_pdf_to_markdown.py path/to/paper.pdf --output-dir docs/l
 Pass the converted Markdown file to `literature-gap-analysis` (Literature Gap Analysis) or `claim-evidence-gate` (Evidence Gate) for detailed textual critique.
 
 ## Outputs
+- `docs/literature/papers/_downloads/[paper_name].pdf` (primary source; version-controlled)
 - `docs/literature/papers/[paper_name].md`
 - `docs/literature/papers/assets/extracted_image_*.jpg`
 - `docs/literature/papers/assets/extracted_image_*.png` (when PPM normalization succeeds)

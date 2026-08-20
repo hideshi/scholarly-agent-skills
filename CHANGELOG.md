@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.9.0] - 2026-08-20
+
+### Changed
+- **Literature PDF grounding** (`check_literature_grounding.py`, `citation-traceability-audit` v2.1.0, `pdf-paper-ingestion` v1.3.0, `pre-submission-triage` v1.1.0, fact-grounding-rule ja/en): `status: full-text` without a matching `_downloads/{slug}.pdf` is now WARN. `_downloads/` is version-controlled (not gitignored). From jiatama-supremacism VALID-1 friction: F5/F6 notes claimed full-text while the original PDFs were absent.
+
+---
+
 ## [1.8.0] - 2026-08-20
 
 ### Added

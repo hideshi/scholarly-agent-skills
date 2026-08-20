@@ -22,7 +22,7 @@ All information cited in the manuscript MUST be separated into two phases by pur
 
 ### 2-B. Grounding — Mandatory for Academic Citations
 When citing academic literature in manuscript chapters (`docs/chapters/`), agents MUST create **`docs/<paper-id>/literature/papers/*.md`** via one of:
-  1. **PDF ingestion (`convert_pdf_to_markdown.py`)**: Download and convert academic PDFs
+  1. **PDF ingestion (`convert_pdf_to_markdown.py`)**: Download the original PDF to `papers/_downloads/{slug}.pdf` and convert to structured Markdown
   2. **arXiv / open-access full text**: Download and convert to Markdown
   3. **Manual literature stub (`status: manual-stub`)**: For books, theses, or paywalled sources—page-referenced excerpts in frontmatter Markdown (linked to §2 manual primary data inventories)
   4. **Open Data API scripts (`fetch_macro_data.py`, etc.)**: For quantitative claims saved under `docs/data/`
@@ -35,7 +35,8 @@ When citing academic literature in manuscript chapters (`docs/chapters/`), agent
 - All fetched information MUST be saved as physical data files inside the repository (Git commits are executed upon user approval):
   - **`docs/data/`**: Processed statistical tables, datasets, and indicator files (`*.md`, `*.csv`, `*.json`).
   - **`docs/literature/literature-matrix.md`**: Candidate literature index and gap analysis (**index only—not citation evidence**).
-  - **`docs/literature/papers/*.md`**: Primary literature text (ingestion artifacts—**evidence for academic citations**).
+  - **`docs/literature/papers/*.md`**: Primary literature text (ingestion artifacts—**content-matching evidence for academic citations**).
+  - **`docs/literature/papers/_downloads/*.pdf`**: Primary-source PDFs (**re-audit target for `full-text`. Do not gitignore**).
 - Every statistic or factual claim in `docs/chapters/` MUST link to an existing file in `docs/data/` or `docs/literature/papers/`.
 
 ---
@@ -56,4 +57,4 @@ When outputting calculated figures (ratios, multipliers, percentage changes, gro
   1. Execute web search/API tools, PDF ingestion, or manual stub registration to create the required file under `docs/data/` or `docs/literature/papers/`.
   2. Withhold or revise the ungrounded assertion until physical data is secured.
 - **Academic citation gate**: When `python3 scripts/check_literature_grounding.py` returns FAIL, block further writing or major edits to the affected chapter/section (WARN allows continued drafting but full-text grounding is recommended before claim-evidence-gate).
-- **Gate uses `papers/*.md` as canonical**: PDFs MAY be gitignored; judgments rely on Markdown frontmatter and body text length (reproducible in CI/clean clones).
+- **Gate uses `papers/*.md` as the content-matching SoT and `papers/_downloads/*.pdf` as the primary source**: `status: full-text` without a matching `_downloads/{slug}.pdf` is WARN (the Markdown note is a transcription, not the original). Do **not** gitignore `_downloads/`. Do not fetch PDFs the user has no right to redistribute; keep those as `manual-stub`. Judgments use frontmatter, body length, and PDF presence.

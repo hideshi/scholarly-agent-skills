@@ -32,7 +32,7 @@ class TestClassifyPaper(unittest.TestCase):
         verdict, _ = classify_paper(None)
         self.assertEqual(verdict, "FAIL")
 
-    def test_pass_full_text(self):
+    def test_pass_full_text_with_pdf(self):
         paper = PaperRecord(
             path=Path("x.md"),
             title="T",
@@ -42,9 +42,25 @@ class TestClassifyPaper(unittest.TestCase):
             arxiv_id="",
             status="full-text",
             body_chars=1000,
+            source_pdf=Path("_downloads/x.pdf"),
         )
         verdict, _ = classify_paper(paper)
         self.assertEqual(verdict, "PASS")
+
+    def test_warn_full_text_without_pdf(self):
+        paper = PaperRecord(
+            path=Path("gakushuin-exam-misconduct.md"),
+            title="T",
+            authors="Gakushuin",
+            year="2023",
+            doi="",
+            arxiv_id="",
+            status="full-text",
+            body_chars=1000,
+        )
+        verdict, reason = classify_paper(paper)
+        self.assertEqual(verdict, "WARN")
+        self.assertIn("_downloads/gakushuin-exam-misconduct.pdf", reason)
 
     def test_warn_manual_stub(self):
         paper = PaperRecord(
@@ -97,8 +113,33 @@ class TestAuditGrounding(unittest.TestCase):
                 "year: 2016\nstatus: full-text\ndoi: \narxiv_id: \n---\n\n" + body,
                 encoding="utf-8",
             )
+            (papers / "_downloads").mkdir()
+            (papers / "_downloads" / "risko-2016.pdf").write_bytes(b"%PDF-1.4\n" + b"x" * 64)
             results = audit_grounding([chapter], papers, None)
             self.assertEqual(results[0].verdict, "PASS")
+
+    def test_audit_warns_full_text_without_pdf(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            chapters = root / "chapters"
+            papers = root / "papers"
+            chapters.mkdir()
+            papers.mkdir()
+            chapter = chapters / "ch1.md"
+            chapter.write_text(
+                "Prior work shows an effect (Risko & Gilbert, 2016).\n",
+                encoding="utf-8",
+            )
+            paper = papers / "risko-2016.md"
+            body = "x" * 600
+            paper.write_text(
+                "---\ntitle: Cognitive Offloading\nauthors: Risko, E. F., & Gilbert, S. J.\n"
+                "year: 2016\nstatus: full-text\ndoi: \narxiv_id: \n---\n\n" + body,
+                encoding="utf-8",
+            )
+            results = audit_grounding([chapter], papers, None)
+            self.assertEqual(results[0].verdict, "WARN")
+            self.assertIn("_downloads/risko-2016.pdf", results[0].reason)
 
     def test_load_skips_underscore_files(self):
         with tempfile.TemporaryDirectory() as tmp:

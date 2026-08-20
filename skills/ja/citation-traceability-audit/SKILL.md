@@ -1,6 +1,6 @@
 ---
 name: citation-traceability-audit
-version: 2.0.0
+version: 2.1.0
 description: 投稿前・各章完成時に、本文引用の書誌整合（matrix SoT）と文献実体化（papers/ Grounding）を監査し、references.mdを機械生成するスキル
 ---
 
@@ -47,8 +47,8 @@ python3 scripts/check_literature_grounding.py docs/chapters/ \
 
 **判定**:
 - **FAIL**: 対応する `papers/*.md` が存在しない → **執筆ブロック**（fact-grounding-rule §5）
-- **WARN**: `status: manual-stub` または `abstract-only`、または本文文字数不足
-- **PASS**: `status: full-text` かつ十分な本文テキスト
+- **WARN**: `status: manual-stub` または `abstract-only`、または本文文字数不足、または **`status: full-text` なのに `_downloads/{slug}.pdf` が無い**
+- **PASS**: `status: full-text` かつ十分な本文テキスト **かつ** 対応 PDF が `_downloads/` にある
 
 **`papers/*.md` frontmatter 必須フィールド**:
 `title`, `authors`, `year`, `doi`, `arxiv_id`, `status` (`full-text` | `manual-stub` | `abstract-only`), `source_url`, `version`
@@ -56,6 +56,7 @@ python3 scripts/check_literature_grounding.py docs/chapters/ \
 **成果物**: `docs/design/literature-grounding-report.md`（スクリプト出力を転記）
 
 > ⚠️ **書籍・学位論文**: PDF 自動取得不可の文献は `status: manual-stub` + ページ番号付き書き抜きで実体化する（fact-grounding-rule §2-B-3）。
+> ⚠️ **一次資料 PDF**: `_downloads/` は gitignore しない。`full-text` 主張の再照合対象である。再配布権の無い PDF は置かず stub に留める（DISCLAIMER）。
 
 ### Step 3: `references.md` の自動派生生成
 照合完了後、`literature-matrix.md` から派生生成物として `docs/chapters/references.md` を自動生成する：

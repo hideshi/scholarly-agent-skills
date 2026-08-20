@@ -57,8 +57,9 @@ Artifacts in paper repositories are recommended to be organized into the followi
 - `docs/manuscript/` (or `docs/<paper-id>/manuscript/`): Final paper outputs and rendered formats (`[paper_title].md`, `[paper_title].html`, `[paper_title].pdf`)
 - `docs/chapters/`: Chapter drafts and manuscript sections (`chapter1-introduction.md`, `chapter2-macro-and-labor.md`)
 - `docs/design/`: Paper outline, test cases, domain concepts, evidence gate reports (`paper-outline.md`, `test-cases.md`, `domain-concepts.md`, `evidence-gate-report.md`)
-- `docs/literature/`: Literature matrix, gap reports, glossary, paper reading notes (`literature-matrix.md`, `literature-gap-report.md`, `bilingual-glossary.md`, `papers/*.md`)
+- `docs/literature/`: Literature matrix, gap reports, glossary, paper reading notes (`literature-matrix.md`, `literature-gap-report.md`, `bilingual-glossary.md`, `papers/*.md`, `papers/_downloads/*.pdf`)
 - `docs/data/`: Empirical datasets and aggregated statistics (`philippines-poverty-data.md`)
 
 - **Version control is recommended; agent auto-commit is forbidden**: Keep `docs/` reports, inventories, chapter drafts, and manuscripts in Git for traceability. Agents MUST NOT run `git add` / `git commit` after edits. Show changed files and the diff, and commit only when the user explicitly says to commit. Do not treat task completion or a passing quality gate as approval.
 - **Commit Forbidden (Must Ignore)**: Raw dataset files (`raw_data/`) and PII mapping files (`mapping.json`) MUST be ignored via `.gitignore` and `python3 scripts/setup_ai_ignore.py` to prevent privacy/security leaks.
+- **Do not ignore literature PDFs**: Primary-source PDFs under `docs/<paper-id>/literature/papers/_downloads/` are version-controlled (not gitignored). They are the re-audit target for `status: full-text`. Do not store PDFs the user has no right to redistribute; keep those as `manual-stub`.

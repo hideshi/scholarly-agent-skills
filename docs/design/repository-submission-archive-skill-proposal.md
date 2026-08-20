@@ -58,7 +58,7 @@ DSR / 単一ケーススタディ論文が **Git 監査証跡**（コミット�
   "paper_id": "cognitive-scaffolding",
   "source_repo": "/path/to/academic-papers",
   "include_paths": ["docs/cognitive-scaffolding/"],
-  "exclude_globs": ["**/_downloads/**", "**/raw_data/**", "**/.env*"],
+  "exclude_globs": ["**/raw_data/**", "**/.env*"],
   "git_ref": "main",
   "git_since_commit": null,
   "other_papers_in_repo": ["medieval-japan-information-flow", "philippines-poverty"]
@@ -74,7 +74,7 @@ DSR / 単一ケーススタディ論文が **Git 監査証跡**（コミット�
 | PII | `mask_pii_data.py` 対象パス確認 |
 | 秘密 | `.env`, API key, `mapping.json` grep |
 | 他論文 | `include_paths` 外が bundle に含まれないこと |
-| 文献 PDF | 再配布不可 PDF は **stub のみ**（`_downloads/` 除外） |
+| 文献 PDF | `_downloads/` の OA・公式 PDF は原本として同梱。再配布不可 PDF は取得せず **stub のみ** |
 | 匿名化 | `dialogue-prompts-log.md` 内 GitHub URL・著者メールの redaction |
 
 ### Step 2: Git 監査証跡のエクスポート（必須）
@@ -195,7 +195,7 @@ description: 論文受理後・査読対応時に、Git監査証跡付きリポ�
 | :--- | :--- | :--- |
 | T1 | `--verify-commits 85e1bcc` | MANIFEST に PASS |
 | T2 | `include_paths` 外の論文ディレクトリ | bundle に含まれない |
-| T3 | `_downloads/*.pdf` | 除外 |
+| T3 | `_downloads/*.pdf`（OA・公式） | 同梱。再配布不可は stub のみ |
 | T4 | 存在しない hash | FAIL + stderr |
 | T5 | `dialogue-prompts-log` に github.com/ユーザー名 | redaction 警告 |
 

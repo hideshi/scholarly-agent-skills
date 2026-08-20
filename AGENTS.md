@@ -57,9 +57,10 @@ python3 /path/to/scholarly-agent-skills/scripts/link_shared_skills.py /path/to/t
 - `docs/manuscript/` (または `docs/<paper-id>/manuscript/`): 完成論文原稿・ビルド成果物 (`[paper_title].md`, `[paper_title].html`, `[paper_title].pdf`)
 - `docs/chapters/`: 論文本文の各章原稿 (`chapter1-introduction.md`, `chapter2-macro-and-labor.md` 等)
 - `docs/design/`: 論文設計・構成・防衛インベントリ (`paper-outline.md`, `test-cases.md`, `domain-concepts.md`, `evidence-gate-report.md`)
-- `docs/literature/`: 文献調査・用語集・論文ノート (`literature-matrix.md`, `literature-gap-report.md`, `bilingual-glossary.md`, `papers/*.md`)
+- `docs/literature/`: 文献調査・用語集・論文ノート (`literature-matrix.md`, `literature-gap-report.md`, `bilingual-glossary.md`, `papers/*.md`, `papers/_downloads/*.pdf`)
 - `docs/data/`: 取得データ・統計集計成果物 (`philippines-poverty-data.md` 等)
 
 - **バージョン管理は推奨、エージェントの自動コミットは禁止**: `docs/` 配下の報告書・インベントリ・本文草稿・完成原稿は、トレーサビリティのため Git で残す。ただしエージェントは修正後に `git add` / `git commit` を実行しない。変更ファイルと差分を提示し、ユーザーが「コミットして」と明示したときだけコミットする。作業完了や品質ゲート通過を承認と解釈しない。
 - **コミット厳禁（要除外）**: 生の調査データ（`raw_data/`）および PII マッピング用ファイル（`mapping.json` 等）は、プライバシー・セキュリティ保護のため `.gitignore` および `python3 scripts/setup_ai_ignore.py` による AI Ignore 対象に設定し、コミットしないでください。
+- **文献 PDF は除外しない**: `docs/<paper-id>/literature/papers/_downloads/` の一次資料 PDF はバージョン管理する（gitignore しない）。`status: full-text` の再照合対象である。再配布権の無い PDF は置かず `manual-stub` に留める。
 

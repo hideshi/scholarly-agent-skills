@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 Verify that in-text academic citations in manuscript chapters have grounded
-artifacts under docs/literature/papers/*.md.
+artifacts under docs/literature/papers/*.md, and that status=full-text notes
+have a matching primary-source PDF under papers/_downloads/{slug}.pdf.
 
 Join keys (priority): DOI > arXiv ID > author surname + year (frontmatter).
 Exit codes: 0 = PASS/WARN only, 1 = at least one FAIL.
@@ -38,6 +39,7 @@ class PaperRecord:
     arxiv_id: str
     status: str
     body_chars: int
+    source_pdf: Optional[Path] = None
 
 
 @dataclass
@@ -78,6 +80,15 @@ def normalize_arxiv(value: str) -> str:
     return value
 
 
+def resolve_source_pdf(papers_dir: Path, stem: str) -> Optional[Path]:
+    """Return the primary-source PDF next to the note, if present."""
+    for name in (f"{stem}.pdf", f"{stem}.PDF"):
+        candidate = papers_dir / "_downloads" / name
+        if candidate.is_file() and candidate.stat().st_size > 0:
+            return candidate
+    return None
+
+
 def load_paper_records(papers_dir: Path) -> List[PaperRecord]:
     records: List[PaperRecord] = []
     if not papers_dir.exists():
@@ -98,6 +109,7 @@ def load_paper_records(papers_dir: Path) -> List[PaperRecord]:
                 arxiv_id=normalize_arxiv(meta.get("arxiv_id", "")),
                 status=meta.get("status", "unknown"),
                 body_chars=len(body.strip()),
+                source_pdf=resolve_source_pdf(papers_dir, path.stem),
             )
         )
     return records
@@ -153,7 +165,13 @@ def classify_paper(paper: Optional[PaperRecord]) -> Tuple[str, str]:
                 f"status=full-text but body has only {paper.body_chars} chars "
                 f"(min {MIN_FULL_TEXT_CHARS}); possible abstract-only or scan PDF",
             )
-        return "PASS", f"grounded at {paper.path.name}"
+        if paper.source_pdf is None:
+            return (
+                "WARN",
+                f"status=full-text but no PDF at _downloads/{paper.path.stem}.pdf; "
+                "markdown note is a transcription, not the primary source",
+            )
+        return "PASS", f"grounded at {paper.path.name} (PDF: {paper.source_pdf.name})"
 
     if status in {"manual-stub", "abstract-only"}:
         return "WARN", f"status={status} at {paper.path.name}"

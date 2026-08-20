@@ -22,7 +22,7 @@ AI エージェントによる学術論文執筆時のハルシネーション�
 
 ### 2-B. 実体化（Grounding）— 引用根拠として必須
 学術文献を本文（`docs/chapters/`）で引用する場合、以下のいずれかにより **`docs/<paper-id>/literature/papers/*.md`** を生成しなければならない：
-  1. **PDF解析ツール (`convert_pdf_to_markdown.py` 等)**: 学術論文PDFのダウンロードと構造化テキスト変換
+  1. **PDF解析ツール (`convert_pdf_to_markdown.py` 等)**: 学術論文PDFのダウンロード（`papers/_downloads/{slug}.pdf` に原本を保存）と構造化テキスト変換
   2. **arXiv / OA 全文取得**: 全文テキストのダウンロードと Markdown 化
   3. **手動文献 stub (`status: manual-stub`)**: 書籍・学位論文等、PDF 自動取得不可の文献について、ページ番号付き手動書き抜きを frontmatter 付き Markdown として保存（§2-4 手動調査データインベントリと接続）
   4. **オープンデータ API スクリプト (`fetch_macro_data.py` 等)**: 統計・数値主張用（`docs/data/` へ保存）
@@ -35,7 +35,8 @@ AI エージェントによる学術論文執筆時のハルシネーション�
 - 取得した一切の情報は、必ずリポジトリ内の以下の場所に実体ファイルとして保存する（※Gitリポジトリへのコミットはユーザーの承認に基づき行う）：
   - **`docs/data/`**: 取得した統計数値、時系列テーブル、指標データセット (`*.md`, `*.csv`, `*.json`)
   - **`docs/literature/literature-matrix.md`**: 文献候補一覧・ギャップ分析（**索引のみ。引用根拠として不可**）
-  - **`docs/literature/papers/*.md`**: 一次文献テキスト（ingestion 成果物。**学術文献引用の根拠**）
+  - **`docs/literature/papers/*.md`**: 一次文献テキスト（ingestion 成果物。**学術文献引用の内容照合**）
+  - **`docs/literature/papers/_downloads/*.pdf`**: 一次資料の原本 PDF（**`full-text` の再照合対象。gitignore しない**）
 - **参照の一致**: 本文（`docs/chapters/`）で記述されるすべての数値や事実には、必ず上記リポジトリ内ファイルへの参照・出典リンクを紐付けなければならない。
 
 ---
@@ -56,4 +57,4 @@ AI エージェントによる学術論文執筆時のハルシネーション�
   1. ネット検索・API実行・PDF ingestion・手動 stub 登録により一次情報を取得し、`docs/data/` または `docs/literature/papers/` に実体ファイルを生成する。
   2. 実体データが取得できるまで該当記述を保留・修正する。
 - **学術文献引用の判定**: `python3 scripts/check_literature_grounding.py` が FAIL を返した場合、該当章/節の執筆・追記をブロックする（WARN は執筆継続可だが claim-evidence-gate 前に full-text 化を推奨）。
-- **ゲートは `papers/*.md` を正本とする**: PDF は `.gitignore` 可。判定は Markdown frontmatter と本文テキスト長に基づく（CI/クリーンクローンでも再現可能）。
+- **ゲートは `papers/*.md` を内容の照合正本とし、`papers/_downloads/*.pdf` を一次資料の原本とする**: `status: full-text` のノートに対応する PDF が `_downloads/{slug}.pdf` に無い場合は WARN（Markdown は転写であり原本ではない）。`_downloads/` は `.gitignore` しない（バージョン管理する）。再配布権の無い PDF は取得せず `manual-stub` に留める。判定は frontmatter・本文テキスト長・PDF 有無に基づく。

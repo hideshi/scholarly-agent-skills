@@ -10,5 +10,6 @@
 ## 🧪 Quick Test & Validation Commands
 - Run Unit Tests: `python3 scripts/run_tests.py`
 - Validate Skill Quality: `python3 scripts/check_skill_quality.py`
+- Enable local pre-push CI gate: `python3 scripts/setup_git_hooks.py`
 - Setup AI Ignore: `python3 scripts/setup_ai_ignore.py`
 - Mask PII Data: `python3 scripts/mask_pii_data.py <file>`

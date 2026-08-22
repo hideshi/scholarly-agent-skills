@@ -25,6 +25,18 @@ python3 scripts/check_skill_quality.py
 python3 scripts/run_tests.py
 ```
 
+## Local pre-push hook (same checks as GitHub CI)
+
+`.git/hooks/` is not versioned. This repo keeps hooks in `.githooks/` and points Git at that directory.
+
+Enable once per clone (sets `core.hooksPath`):
+
+```bash
+python3 scripts/setup_git_hooks.py
+```
+
+After that, `git push` runs `scripts/run_tests.py` and `scripts/check_skill_quality.py` and aborts on failure. Emergency bypass: `git push --no-verify`.
+
 ## Pull requests
 
 1. Keep the change focused (one skill, one script, or one docs fix).

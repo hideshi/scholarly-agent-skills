@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Added
+- **Local pre-push CI gate** (`.githooks/pre-push`, `scripts/setup_git_hooks.py`): once per clone, `python3 scripts/setup_git_hooks.py` sets `core.hooksPath` so `git push` runs the same `run_tests.py` + `check_skill_quality.py` checks as GitHub Actions. Bypass with `git push --no-verify`.
+
+### Fixed
+- **`sensitive-expression-guard` (en)**: rename `## Artifacts` to `## Outputs` so `check_skill_quality.py` accepts the required section heading.
+
+---
+
 ## [1.10.0] - 2026-08-20
 
 ### Added

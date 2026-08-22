@@ -31,6 +31,7 @@ All skills and rules are stored in tool-agnostic canonical directories:
 - **Rules**: [`rules/en/`](rules/en) & [`rules/ja/`](rules/ja)
   - **Core Rule**: [`rules/en/fact-grounding-rule.md`](rules/en/fact-grounding-rule.md) (Strict Fact-Grounding & Repository Evidence Rule to eliminate AI hallucinations)
 - **Scripts**: [`scripts/`](scripts)
+- **Local pre-push gate**: [`.githooks/pre-push`](.githooks/pre-push). Enable once per clone with `python3 scripts/setup_git_hooks.py` (same unit tests + skill quality as GitHub CI).
 
 ---
 

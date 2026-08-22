@@ -31,6 +31,7 @@
 - **正本ルール群**: [`rules/ja/`](rules/ja) および [`rules/en/`](rules/en)
   - **重要ルール**: [`rules/ja/fact-grounding-rule.md`](rules/ja/fact-grounding-rule.md) (ハルシネーション完全防止・インターネット一次情報リアルタイム取得＆リポジトリ実体化ルール)
 - **スクリプト群**: [`scripts/`](scripts) (多プロバイダー論文検索、PDF変換・画像抽出、AI Ignore設定、PIIマスキング、出典自動チェック、テスト実行)
+- **ローカル pre-push ゲート**: [`.githooks/pre-push`](.githooks/pre-push)。クローンごと 1 回 `python3 scripts/setup_git_hooks.py` で有効化（GitHub CI と同じ unit test + skill quality）。
 
 ---
 

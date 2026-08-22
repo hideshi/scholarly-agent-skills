@@ -1,6 +1,6 @@
 ---
 name: sensitive-expression-guard
-version: 1.0.0
+version: 1.0.1
 description: On chapter completion, before manuscript builds, and before submission — mechanically screens sensitive expressions (absolute quantifiers, deficit-model vocabulary, author-misidentification co-occurrence, abstract register policy, presence of a non-diagnostic disclaimer) with check_sensitive_expression.py, and adds an LLM "careless adversarial reader" simulation to surface semantic short-circuit risks; author decisions accumulate in sensitive-expressions.yml. Especially important for DSR papers with self-referential case studies
 ---
 
@@ -81,7 +81,7 @@ allowlist:
 - Terminology drift: `terminology-consistency` skill (coordinates with the §2.5 modality ceiling)
 - General WARN/FAIL triage: `pre-submission-triage` skill
 
-## Artifacts
+## Outputs
 - Sensitive-expression triage summary (presented in chat)
 - `docs/<paper-id>/design/sot/sensitive-expressions.yml` (accumulated rules and decisions — source of truth)
 - `docs/<paper-id>/design/logs/friction-log.md` (audit trail of decisions)

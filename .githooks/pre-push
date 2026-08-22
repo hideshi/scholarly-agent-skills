@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Local gate equivalent to GitHub Actions job "Run Unit Tests & Validate Skills".
+# Enable once per clone: python3 scripts/setup_git_hooks.py
+# Bypass (emergency only): git push --no-verify
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+
+echo "🔍 pre-push: running CI-equivalent checks..."
+python3 scripts/run_tests.py
+python3 scripts/check_skill_quality.py
+echo "✅ pre-push checks passed"

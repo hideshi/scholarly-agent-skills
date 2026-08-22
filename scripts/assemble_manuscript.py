@@ -24,20 +24,9 @@ from pathlib import Path
 
 SCRIPTS_DIR = Path(__file__).resolve().parent
 
-CHAPTER_FILES = [
-    "chapter1-introduction.md",
-    "chapter2-theoretical-framework.md",
-    "chapter3-core-mechanisms.md",
-    "chapter4-case-study.md",
-    "chapter5-limitations-ethics.md",
-    "chapter6-conclusion.md",
-]
-
-APPENDIX_FILES = [
-    "appendix-a-glossary.md",
-    "appendix-b-dialogue-excerpt.md",
-    "appendix-c-audit-index.md",
-]
+# Fallback only when chapters/ has no chapter*.md (should not happen).
+# Discovery is by filename: chapter*.md sorted by leading number.
+APPENDIX_GLOB = "appendix-*.md"
 
 # Characters illegal or awkward in cross-platform filenames
 _UNSAFE_FILENAME_CHARS = re.compile(r'[\\/:*?"<>|\x00-\x1f]')
@@ -64,6 +53,26 @@ def extract_titles(outline_text: str) -> tuple[str, str, str]:
     # Short title for H1: part before full-width colon subtitle
     ja_short = ja_full.split("：")[0].strip()
     return ja_short, ja_full, en_match.group(1).strip()
+
+
+_BIBLIO_FIELDS = (
+    ("著者", "著者"),
+    ("所属", "所属"),
+    ("日付", "日付"),
+    ("ライセンス", "ライセンス"),
+    ("バージョン", "バージョン"),
+    ("DOI", "DOI"),
+)
+
+
+def extract_biblio_lines(outline_text: str) -> list[str]:
+    """Return markdown list lines for author/affiliation if present."""
+    lines: list[str] = []
+    for key, label in _BIBLIO_FIELDS:
+        match = re.search(rf"\*\*{re.escape(key)}\*\*:\s*(.+)", outline_text)
+        if match:
+            lines.append(f"- **{label}**: {match.group(1).strip()}")
+    return lines
 
 
 def title_to_filename(title: str, suffix: str = ".md") -> str:
@@ -98,6 +107,27 @@ def strip_chapter_references(text: str) -> str:
     return text.rstrip() + "\n"
 
 
+def discover_chapter_files(chapters_dir: Path) -> list[Path]:
+    """Return chapter*.md paths sorted by the leading chapter number."""
+    files = [p for p in chapters_dir.glob("chapter*.md") if p.is_file()]
+    if not files:
+        raise FileNotFoundError(f"No chapter*.md files in {chapters_dir}")
+
+    def sort_key(path: Path) -> tuple[int, str]:
+        match = re.match(r"chapter(\d+)", path.name)
+        number = int(match.group(1)) if match else 10**6
+        return (number, path.name)
+
+    return sorted(files, key=sort_key)
+
+
+def discover_appendix_files(manuscript_dir: Path) -> list[Path]:
+    """Return appendix-*.md paths if present. Empty list is allowed."""
+    if not manuscript_dir.is_dir():
+        return []
+    return sorted(p for p in manuscript_dir.glob(APPENDIX_GLOB) if p.is_file())
+
+
 def assemble(paper_id: str, repo_root: Path) -> tuple[str, str]:
     """Assemble manuscript text and return (content, ja_full_title)."""
     base = repo_root / "docs" / paper_id
@@ -107,56 +137,55 @@ def assemble(paper_id: str, repo_root: Path) -> tuple[str, str]:
     outline = outline_path.read_text(encoding="utf-8")
     ja_title, ja_full, en_title = extract_titles(outline)
     abstract = extract_abstract(outline)
+    biblio = extract_biblio_lines(outline)
 
     parts: list[str] = [
         f"# {ja_title}",
         "",
         f"> **{en_title}**",
         "",
-        f"<!-- AUTO-ASSEMBLED from chapters/ + references.md + manuscript/appendix-*.md. Regenerated {date.today().isoformat()}. -->",
-        "",
-        "---",
-        "",
-        "## アブストラクト",
-        "",
-        abstract,
-        "",
-        "---",
-        "",
     ]
+    if biblio:
+        parts.extend(biblio)
+        parts.append("")
+    parts.extend(
+        [
+            f"<!-- AUTO-ASSEMBLED from chapters/ + references.md + manuscript/appendix-*.md. Regenerated {date.today().isoformat()}. -->",
+            "",
+            "---",
+            "",
+            "## アブストラクト",
+            "",
+            abstract,
+            "",
+            "---",
+            "",
+        ]
+    )
 
     chapters_dir = base / "chapters"
-    for name in CHAPTER_FILES:
-        path = chapters_dir / name
-        if not path.is_file():
-            raise FileNotFoundError(f"Missing chapter: {path}")
+    for path in discover_chapter_files(chapters_dir):
         body = strip_chapter_references(path.read_text(encoding="utf-8"))
         parts.append(body)
         if not body.endswith("\n"):
             parts.append("")
 
-    # Chapter 6 inheritance note (replaces stripped per-chapter refs footer)
-    parts.extend(["---", "", "", "Yin (2018) ほか各章引用文献を継承する。", "", "---", ""])
-
     refs_path = chapters_dir / "references.md"
     if not refs_path.is_file():
         raise FileNotFoundError(f"Missing references: {refs_path}")
+    parts.extend(["---", ""])
     parts.append(refs_path.read_text(encoding="utf-8").rstrip())
-    parts.append("")
-    parts.append("---")
-    parts.append("")
-    parts.append("# 付録")
     parts.append("")
 
     manuscript_dir = base / "manuscript"
-    for name in APPENDIX_FILES:
-        path = manuscript_dir / name
-        if not path.is_file():
-            raise FileNotFoundError(f"Missing appendix: {path}")
-        parts.append(path.read_text(encoding="utf-8").rstrip())
-        parts.append("")
-        parts.append("---")
-        parts.append("")
+    appendices = discover_appendix_files(manuscript_dir)
+    if appendices:
+        parts.extend(["---", "", "# 付録", ""])
+        for path in appendices:
+            parts.append(path.read_text(encoding="utf-8").rstrip())
+            parts.append("")
+            parts.append("---")
+            parts.append("")
 
     return "\n".join(parts).rstrip() + "\n", ja_full
 

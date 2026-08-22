@@ -71,15 +71,20 @@ graph TD
     PR -.->|before read-through| I
     FD[friction-driven-skill-improvement] -.->|during and at end of session| J
 
-    style K fill:#c8e6c9,stroke:#2e7d32
-    style RP fill:#ffe0b2,stroke:#ef6c00
-    style F fill:#e1bee7,stroke:#6a1b9a
-    style DCT fill:#e1bee7,stroke:#6a1b9a
-    style J fill:#fff9c4,stroke:#f9a825
-    style PR fill:#fff9c4,stroke:#f9a825
-    style FD fill:#fff9c4,stroke:#f9a825
-    style PT fill:#ffcdd2,stroke:#c62828
-    style L fill:#bbdefb,stroke:#1565c0
+    classDef default fill:#eceff1,stroke:#546e7a,color:#212121
+    style K fill:#c8e6c9,stroke:#2e7d32,color:#1b5e20
+    style RP fill:#ffe0b2,stroke:#ef6c00,color:#e65100
+    style F fill:#e1bee7,stroke:#6a1b9a,color:#4a148c
+    style DCT fill:#e1bee7,stroke:#6a1b9a,color:#4a148c
+    style J fill:#fff9c4,stroke:#f9a825,color:#212121
+    style PR fill:#fff9c4,stroke:#f9a825,color:#212121
+    style FD fill:#fff9c4,stroke:#f9a825,color:#212121
+    style PS fill:#fff9c4,stroke:#f9a825,color:#212121
+    style PT fill:#ffcdd2,stroke:#c62828,color:#b71c1c
+    style RR fill:#ffcdd2,stroke:#c62828,color:#b71c1c
+    style TC fill:#ffcdd2,stroke:#c62828,color:#b71c1c
+    style SE fill:#ffcdd2,stroke:#c62828,color:#b71c1c
+    style L fill:#bbdefb,stroke:#1565c0,color:#0d47a1
 ```
 
 **Legend**:
